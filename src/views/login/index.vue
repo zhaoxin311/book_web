@@ -181,8 +181,8 @@ export default {
     return {
       show: false,
       loginForm: {
-        username: '',
-        password: '',
+        username: 'WB03217',
+        password: '1111111',
         imgCaptcha: '',
         imgCaptchaToken: ''
       },
@@ -268,8 +268,10 @@ export default {
           this.$store.dispatch('user/login', param).then(response => {
             console.log('333')
             if (response.code === 200) {
+              console.log('444')
+              this.$message({ type: 'success', message: '登录成功' })
               // window.sessionStorage.setItem('token', response.data.token)
-              // this.$router.push({ path: this.redirect || '/' })
+              this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             } else {
               void this.refreshCaptcha()

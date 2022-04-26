@@ -68,6 +68,9 @@ export default {
         }
       })
 
+      // if (children[0] && children[0]['name'] && children[0]['name'] === 'transfer/announcements-first') {
+      //   return false
+      // }
       // When there is only one child router, the child router is displayed by default
       if (showingChildren.length === 1) {
         return true

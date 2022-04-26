@@ -34,11 +34,11 @@ const actions = {
       console.log('11333')
       login(userInfo).then(response => {
         console.log('4411333')
-        const { data } = response.results
+        // const { data } = response.results
         console.log(response.results, 'data')
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
+        commit('SET_TOKEN', response.results.token)
+        setToken(response.results.token)
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
@@ -47,19 +47,21 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
+    console.log(state.token, 'tan')
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
-        const { data } = response
+        console.log(response, 'response')
+        // const { data } = response
 
-        if (!data) {
-          return reject('Verification failed, please Login again.')
+        if (!response) {
+          return reject('验证失败，请重新登录')
         }
 
-        const { name, avatar } = data
+        // const { name, avatar } = data
 
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
+        commit('SET_NAME', response.name)
+        commit('SET_AVATAR', response.avatar)
+        resolve(response)
       }).catch(error => {
         reject(error)
       })

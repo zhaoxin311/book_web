@@ -15,24 +15,32 @@ export function register(data) {
   })
 }
 
-export function getInfo(token) {
+export function getInfo() {
   return request({
-    url: '/vue-admin-template/user/info',
-    method: 'get',
-    params: { token }
+    url: 'http://localhost:4001/userInfo',
+    method: 'get'
   })
 }
 
 export function logout() {
   return request({
-    url: '/vue-admin-template/user/logout',
-    method: 'post'
+    url: 'http://localhost:4001/logout',
+    method: 'get'
   })
 }
 // 图片验证码
 export function getImgCaptcha(params) {
   return request({
     url: 'http://localhost:4001/getCaptch',
+    method: 'get',
+    params
+  })
+}
+
+// 获取动态路由（侧边栏）数据
+export function getAsyncRouter(params) {
+  return request({
+    url: 'http://localhost:4001/getAuthMenu',
     method: 'get',
     params
   })
