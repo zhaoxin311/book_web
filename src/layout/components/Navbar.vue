@@ -5,25 +5,24 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <!-- <div class="right-menu-item menu-exit" @click="logout">
+        <i class="el-icon-user-solid" />
+        <span>退出</span>
+      </div> -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
+          <i class="el-icon-user-solid" />
+          <span class="user-name">{{ name || '默认用户' }}<i class="el-icon-caret-bottom" /></span>
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
-            <el-dropdown-item>
-              Home
-            </el-dropdown-item>
+            <el-dropdown-item><span>返回首页</span></el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
-          </a>
+          <el-dropdown-item @click.native="individualism">
+            <span style="display:block;">个人中心</span>
+          </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -44,8 +43,12 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'name'
     ])
+    // name() {
+    //   return this.$store.getters.username
+    // }
   },
   methods: {
     toggleSideBar() {
@@ -54,12 +57,21 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    individualism() {
+      console.log('进入个人中心')
+      // this.$refs.personal.visible = true
+      // this.openInfo()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.el-icon-user-solid:before {
+    font-size: 20px;
+    margin-right: 10px;
+}
 .navbar {
   height: 50px;
   overflow: hidden;
@@ -128,9 +140,9 @@ export default {
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+          // right: -20px;
+          top: 20px;
+          font-size: 15px;
         }
       }
     }

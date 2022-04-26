@@ -59,7 +59,7 @@ const actions = {
 
         // const { name, avatar } = data
 
-        commit('SET_NAME', response.name)
+        commit('SET_NAME', response.result[0].account)
         commit('SET_AVATAR', response.avatar)
         resolve(response)
       }).catch(error => {
@@ -69,12 +69,13 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
+  logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
         resetRouter()
         commit('RESET_STATE')
+        dispatch('tagsView/delAllViews', null, { root: true })
         resolve()
       }).catch(error => {
         reject(error)
