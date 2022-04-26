@@ -14,7 +14,7 @@
       >
         {{ tag.title }}
         <span
-          v-if="!isAffix(tag) && $route.name && $route.name === tag.name"
+          v-if="!isAffix(tag)"
           class="el-icon-close"
           @click.prevent.stop="closeSelectedTag(tag)"
         />
