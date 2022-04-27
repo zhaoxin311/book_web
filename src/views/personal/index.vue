@@ -6,8 +6,8 @@
           <div class="center"> <el-avatar :size="50" style=" right:0;left:0; margin: 0 auto;" :src="avatarUrl" /> </div>
           <div class="center" style="font-size: 16px; font-weight:bold; margin-top: 10px;">{{ name }}</div>
           <div class="center" style="font-size: 14px;  margin-top: 10px;">{{ department }}</div>
-          <el-button v-if="showInfo" type="text" class="right-button" @click="showInfo = !showInfo">收起</el-button>
-          <el-button v-if="!showInfo" type="text" class="right-button" @click="showInfo = !showInfo">更多...</el-button>
+          <el-button v-if="showInfo" type="text" class="right-button" @click="showInfo = !showInfo">收起详情</el-button>
+          <el-button v-if="!showInfo" type="text" class="right-button" @click="showInfo = !showInfo">查看更多</el-button>
         </div>
         <transition name="fade">
           <div v-if="showInfo" class="text item">
@@ -27,7 +27,7 @@
         </transition>
       </el-card>
     </div>
-    <div class="from-con">
+    <el-dialog title="修改个人信息" :visible.sync="userInfoFormVisible">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="account">
           <el-input v-model="ruleForm.account" />
@@ -59,13 +59,13 @@
         <el-form-item label="联系地址" prop="address">
           <el-input v-model="ruleForm.address" type="textarea" />
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">确认提交</el-button>
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
       </el-form>
-    </div>
-
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" type="primary" @click="submitForm('ruleForm')">确认提交</el-button>
+        <el-button size="small" @click="resetForm('ruleForm')">还原数据</el-button>
+        <el-button size="small" @click="userInfoFormVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
   </AppContainer>
 </template>
 <script>
@@ -83,6 +83,7 @@ export default {
       mainHeight: 0,
       avatarUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       showInfo: false,
+      userInfoFormVisible: false,
       ruleForm: {
         id: '',
         account: '',
@@ -118,6 +119,8 @@ export default {
           const params = this.ruleForm
           getUpdateUserInfo(params).then(res => {
             console.log(res)
+            this.userInfoFormVisible = false
+            location.reload()
           })
         } else {
           console.log('error submit!!')
@@ -139,7 +142,7 @@ export default {
       this.ruleForm.email = this.email
       this.ruleForm.address = this.address
       this.ruleForm.last_login_time = moment(new Date()).format('yyyy-MM-DD HH:mm:ss')
-      console.log(this.ruleForm.account, 'name')
+      this.userInfoFormVisible = true
     }
   }
 }
@@ -150,13 +153,7 @@ export default {
     width: 350px;
     height: 500px;
     float: left;
-    border: 1px solid red;
-  }
-  .from-con{
-    width: 700px;
-    height: 600px;
-    float: right;
-    border: 1px solid yellow;
+    // border: 1px solid red;
   }
   .center{
   display: flex;
