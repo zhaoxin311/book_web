@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    department: '',
+    create_time: ''
   }
 }
 
@@ -22,8 +23,11 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
+  SET_DEPARTMENT: (state, department) => {
+    state.department = department
+  },
+  SET_CREATETIME: (state, create_time) => {
+    state.create_time = create_time
   }
 }
 
@@ -51,16 +55,13 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         console.log(response, 'response')
-        // const { data } = response
-
         if (!response) {
           return reject('验证失败，请重新登录')
         }
 
-        // const { name, avatar } = data
-
         commit('SET_NAME', response.result[0].account)
-        commit('SET_AVATAR', response.avatar)
+        commit('SET_DEPARTMENT', response.result[0].department)
+        commit('SET_CREATETIME', response.result[0].create_time)
         resolve(response)
       }).catch(error => {
         reject(error)

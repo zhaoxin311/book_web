@@ -22,7 +22,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'name'
+      'name',
+      'create_time'
     ])
   }
 }
