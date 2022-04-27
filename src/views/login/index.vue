@@ -163,20 +163,6 @@ import createPasswordRules from '@/constant/rules/passwords.js'
 export default {
   name: 'Login',
   data() {
-    // const validateUsername = (rule, value, callback) => {
-    //   if (!validUsername(value)) {
-    //     callback(new Error('Please enter the correct user name'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
-    // const validatePassword = (rule, value, callback) => {
-    //   if (value.length < 6) {
-    //     callback(new Error('The password can not be less than 6 digits'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
     const { validatePass, validatePass2 } = createPasswordRules(this, 'registerFrom')
     return {
       show: false,
@@ -200,10 +186,6 @@ export default {
         confirmPassword: [
           { validator: validatePass2, trigger: 'blur' }
         ]
-        // password: [
-        //   { required: true, message: '请输入密码', trigger: 'blur' },
-        //   { min: 6, message: '密码长度最少6位', trigger: 'blur' }
-        // ]
       },
       loading: false,
       registerLoading: false,
@@ -239,16 +221,9 @@ export default {
     async refreshCaptcha() {
       var moment = require('moment')
       var create_time = moment(new Date()).format('yyyy-MM-DD HH:mm:ss')
-      console.log(create_time, 'time')
       const respones = await getImgCaptcha({ create_time: create_time }).catch(e => console.log(e))
-      // console.log(respones.captch.captch, 're')
-      // const { captcha, captchaToken } = respones.data
-      // const { captcha } = respones
-      // console.log(captcha, 're')
       this.imgCaptchaData = respones.captch.captch
       this.imgCaptchaID = respones.captchID
-      console.log(this.imgCaptchaID, 'id')
-      // this.loginForm.imgCaptchaToken = captchaToken
     },
     handleLogin() {
       this.show = false
@@ -264,13 +239,9 @@ export default {
             password,
             login_time: moment(new Date()).format('yyyy-MM-DD HH:mm:ss')
           }
-          console.log('22333')
           this.$store.dispatch('user/login', param).then(response => {
-            console.log('333')
             if (response.code === 200) {
-              console.log('444')
               this.$message({ type: 'success', message: '登录成功' })
-              // window.sessionStorage.setItem('token', response.data.token)
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             } else {
@@ -301,7 +272,6 @@ export default {
           register(param).then(() => {
             this.registerLoading = false
             this.$message({ type: 'success', message: '注册成功' })
-            // this.RegisterSuccessVisible = true
             console.log('ooo')
             this.$router.push({ path: this.redirect || '/' })
           }).catch(e => {

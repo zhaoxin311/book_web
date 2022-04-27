@@ -6,8 +6,14 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
+    id: '',
     department: '',
-    create_time: ''
+    phone: '',
+    roles: '',
+    remark: '',
+    email: '',
+    address: '',
+    last_login_time: ''
   }
 }
 
@@ -20,14 +26,32 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
+  SET_ID: (state, id) => {
+    state.id = id
+  },
   SET_NAME: (state, name) => {
     state.name = name
   },
   SET_DEPARTMENT: (state, department) => {
     state.department = department
   },
-  SET_CREATETIME: (state, create_time) => {
-    state.create_time = create_time
+  SET_PHONE: (state, phone) => {
+    state.phone = phone
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
+  },
+  SET_REMARK: (state, remark) => {
+    state.remark = remark
+  },
+  SET_EMAIL: (state, email) => {
+    state.email = email
+  },
+  SET_ADDRESS: (state, address) => {
+    state.address = address
+  },
+  SET_LASTTIME: (state, last_login_time) => {
+    state.last_login_time = last_login_time
   }
 }
 
@@ -59,9 +83,15 @@ const actions = {
           return reject('验证失败，请重新登录')
         }
 
+        commit('SET_ID', response.result[0].id)
         commit('SET_NAME', response.result[0].account)
         commit('SET_DEPARTMENT', response.result[0].department)
-        commit('SET_CREATETIME', response.result[0].create_time)
+        commit('SET_PHONE', response.result[0].phone)
+        commit('SET_ROLES', response.result[0].roles)
+        commit('SET_REMARK', response.result[0].remark)
+        commit('SET_EMAIL', response.result[0].email)
+        commit('SET_ADDRESS', response.result[0].address)
+        commit('SET_LASTTIME', response.result[0].last_login_time)
         resolve(response)
       }).catch(error => {
         reject(error)

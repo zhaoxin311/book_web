@@ -45,3 +45,11 @@ export function getAsyncRouter(params) {
     params
   })
 }
+// 更新用户信息
+export function getUpdateUserInfo(data) {
+  return request({
+    url: 'http://localhost:4001/update/userInfo1',
+    method: 'post',
+    data
+  })
+}

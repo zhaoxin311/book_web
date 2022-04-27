@@ -13,15 +13,15 @@
           <div v-if="showInfo" class="text item">
             <el-descriptions class="margin-top" title="详细信息" :column="1">
               <template slot="extra">
-                <el-button type="primary" size="mini">修改个人信息</el-button>
+                <el-button type="primary" size="mini" @click="changeInfo">修改个人信息</el-button>
               </template>
-              <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-              <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-              <el-descriptions-item label="身份">老师</el-descriptions-item>
-              <el-descriptions-item label="备注"><el-tag size="small">学校</el-tag></el-descriptions-item>
-              <el-descriptions-item label="e-mail">1234567890@qq.com</el-descriptions-item>
-              <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-              <el-descriptions-item label="上次登录时间">2022-04-23 15:22:58</el-descriptions-item>
+              <el-descriptions-item label="用户名">{{ name }}</el-descriptions-item>
+              <el-descriptions-item label="手机号">{{ phone }}</el-descriptions-item>
+              <el-descriptions-item label="身份">{{ roles==0?'管理员': (roles==1? '学生':'老师') }}</el-descriptions-item>
+              <el-descriptions-item label="备注"><el-tag size="small">{{ remark==1?'图书馆': (remark==2? '学校':'社会') }}</el-tag></el-descriptions-item>
+              <el-descriptions-item label="e-mail">{{ email }}</el-descriptions-item>
+              <el-descriptions-item label="联系地址">{{ address }}</el-descriptions-item>
+              <el-descriptions-item label="上次登录时间">{{ last_login_time }}</el-descriptions-item>
             </el-descriptions>
           </div>
         </transition>
@@ -29,50 +29,38 @@
     </div>
     <div class="from-con">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="活动名称" prop="name">
-          <el-input v-model="ruleForm.name" />
+        <el-form-item label="用户名" prop="account">
+          <el-input v-model="ruleForm.account" />
         </el-form-item>
-        <el-form-item label="活动区域" prop="region">
-          <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai" />
-            <el-option label="区域二" value="beijing" />
+        <el-form-item label="部门/班级" prop="department">
+          <el-input v-model="ruleForm.department" />
+        </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="ruleForm.phone" />
+        </el-form-item>
+        <el-form-item label="身份" prop="roles">
+          <el-select v-model="ruleForm.roles" placeholder="请选择身份">
+            <el-option label="管理员" :value="0" />
+            <el-option label="老师" :value="2" />
+            <el-option label="学生" :value="1" />
           </el-select>
         </el-form-item>
-        <el-form-item label="活动时间" required>
-          <el-col :span="11">
-            <el-form-item prop="date1">
-              <el-date-picker v-model="ruleForm.date1" type="date" placeholder="选择日期" style="width: 100%;" />
-            </el-form-item>
-          </el-col>
-          <el-col class="line" :span="2">-</el-col>
-          <el-col :span="11">
-            <el-form-item prop="date2">
-              <el-time-picker v-model="ruleForm.date2" placeholder="选择时间" style="width: 100%;" />
-            </el-form-item>
-          </el-col>
+        <el-form-item label="备注" prop="remark">
+          <el-select v-model="ruleForm.remark" placeholder="请选择备注信息">
+            <el-option label="图书馆" :value="1" />
+            <el-option label="学校" :value="2" />
+            <el-option label="社会" :value="3" />
+          </el-select>
         </el-form-item>
-        <el-form-item label="即时配送" prop="delivery">
-          <el-switch v-model="ruleForm.delivery" />
+
+        <el-form-item label="电子邮件" prop="email">
+          <el-input v-model="ruleForm.email" />
         </el-form-item>
-        <el-form-item label="活动性质" prop="type">
-          <el-checkbox-group v-model="ruleForm.type">
-            <el-checkbox label="美食/餐厅线上活动" name="type" />
-            <el-checkbox label="地推活动" name="type" />
-            <el-checkbox label="线下主题活动" name="type" />
-            <el-checkbox label="单纯品牌曝光" name="type" />
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="特殊资源" prop="resource">
-          <el-radio-group v-model="ruleForm.resource">
-            <el-radio label="线上品牌商赞助" />
-            <el-radio label="线下场地免费" />
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="活动形式" prop="desc">
-          <el-input v-model="ruleForm.desc" type="textarea" />
+        <el-form-item label="联系地址" prop="address">
+          <el-input v-model="ruleForm.address" type="textarea" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">确认提交</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -82,6 +70,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import rules from './rules'
+import { getUpdateUserInfo } from '@/api/user'
 import AppContainer from '@/components/AppContainer/AppContainer.vue'
 
 export default {
@@ -94,53 +84,41 @@ export default {
       avatarUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       showInfo: false,
       ruleForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        id: '',
+        account: '',
+        department: '',
+        phone: '',
+        roles: '',
+        remark: '',
+        email: '',
+        address: ''
       },
       rules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
-        ],
-        date1: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-        ],
-        date2: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-        ],
-        type: [
-          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-        ],
-        resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
-        ],
-        desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
-        ]
+        ...rules
       }
     }
   },
   computed: {
     ...mapGetters([
+      'id',
       'name',
       'department',
-      'create_time'
+      'phone',
+      'roles',
+      'remark',
+      'email',
+      'address',
+      'last_login_time'
     ])
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          const params = this.ruleForm
+          getUpdateUserInfo(params).then(res => {
+            console.log(res)
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -149,6 +127,19 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    changeInfo() {
+      var moment = require('moment')
+      this.ruleForm.id = this.id
+      this.ruleForm.account = this.name
+      this.ruleForm.department = this.department
+      this.ruleForm.roles = this.roles
+      this.ruleForm.remark = this.remark
+      this.ruleForm.phone = this.phone
+      this.ruleForm.email = this.email
+      this.ruleForm.address = this.address
+      this.ruleForm.last_login_time = moment(new Date()).format('yyyy-MM-DD HH:mm:ss')
+      console.log(this.ruleForm.account, 'name')
     }
   }
 }
