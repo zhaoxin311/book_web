@@ -70,6 +70,13 @@ export default {
     this.addTags()
   },
   methods: {
+    /** 监听刷新 */
+    boforeunload() {
+      this.$router.push({
+        path: '/'
+      })
+      this.closeAllTags(this.selectedTag)
+    },
     isActive(route) {
       return route.path === this.$route.path
     },
@@ -203,23 +210,26 @@ export default {
 
 <style lang="scss" scoped>
 .tags-view-container {
-  height: 45px;
-  padding-left: 5px;
+  height: 38px;
   width: 100%;
-  background: #E7F1FB;
+  background: #fff;
+  // border-bottom: 1px solid #d8dce5;
+  // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
       position: relative;
       cursor: pointer;
-      line-height: 18px;
-      border-radius: 5px;
-      color: #7C8B9A;
-      padding: 8px 25px;
-      font-size: 14px;
-      // margin-left: 12px;
-      margin-top: 4px;
-
+      height: 24px;
+      line-height: 24px;
+      border: 1px solid #d8dce5;
+      color: #495060;
+      background: #fff;
+      padding: 0 8px;
+      font-size: 12px;
+      margin-left: 12px;
+      margin-top: 8px;
+      border-radius: 2px;
       &:first-of-type {
         margin-left: 15px;
       }
@@ -227,24 +237,16 @@ export default {
         margin-right: 15px;
       }
       &.active {
-        color: #001D3B;
-        &::after {
-        content: '';
-        width: 50px;
-        height: 4px;
-        background-color: #0C68EB;
+        //background-color: #42b983;
+        color: #fff;
+        //border-color: #42b983;
+        // background-color: #1885ff;
+        // border-color: #1885ff;
+        background-color: #ff6102;
+        border-color: #ff6102;
         border-radius: 2px;
-        position: absolute;
-        left: 0;
-        right: 0;
-        margin: {
-          left: auto;
-          right: auto;
-        }
-        bottom: -6px;
-      }
         // &::before {
-        //   content: '';
+        //   content: "";
         //   background: #fff;
         //   display: inline-block;
         //   width: 8px;
@@ -253,6 +255,16 @@ export default {
         //   position: relative;
         //   margin-right: 2px;
         // }
+      }
+      .el-icon-close {
+        float: right;
+        margin-top: 2px;
+      }
+      /* 针对ie */
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        .el-icon-close {
+          margin-top: 4px;
+        }
       }
     }
   }
@@ -267,7 +279,7 @@ export default {
     font-size: 12px;
     font-weight: 400;
     color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
     li {
       margin: 0;
       padding: 7px 16px;
@@ -285,31 +297,22 @@ export default {
 .tags-view-wrapper {
   .tags-view-item {
     .el-icon-close {
-      width: 22px;
-      height: 22px;
-      font-size: 20px;
+      width: 16px;
+      height: 16px;
       vertical-align: 2px;
       border-radius: 50%;
       text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
-      color: #001D3B;
-      position: absolute;
-      right: 0;
-      top: 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       &:before {
-        transform: scale(.6);
+        transform: scale(0.6);
         display: inline-block;
         vertical-align: -3px;
       }
-      // &:hover {
-      //   background-color: #b4bccc;
-      //   color: #001D3B;
-      //   background-color: #fff;
-      // }
+      &:hover {
+        background-color: #b4bccc;
+        color: #fff;
+      }
     }
   }
 }
