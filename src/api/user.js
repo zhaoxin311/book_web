@@ -53,3 +53,11 @@ export function getUpdateUserInfo(data) {
     data
   })
 }
+// 更新用户头像
+export function getUpdateAvatar(data) {
+  return request({
+    url: 'http://localhost:4001/update/userImg',
+    method: 'post',
+    data
+  })
+}

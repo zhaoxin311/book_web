@@ -13,6 +13,7 @@ const getters = {
   remark: state => state.user.remark,
   email: state => state.user.email,
   address: state => state.user.address,
-  last_login_time: state => state.user.last_login_time
+  last_login_time: state => state.user.last_login_time,
+  img_url: state => state.user.img_url
 }
 export default getters

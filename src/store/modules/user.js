@@ -13,7 +13,8 @@ const getDefaultState = () => {
     remark: '',
     email: '',
     address: '',
-    last_login_time: ''
+    last_login_time: '',
+    img_url: ''
   }
 }
 
@@ -52,6 +53,9 @@ const mutations = {
   },
   SET_LASTTIME: (state, last_login_time) => {
     state.last_login_time = last_login_time
+  },
+  SET_IMGURL: (state, img_url) => {
+    state.img_url = img_url
   }
 }
 
@@ -92,6 +96,7 @@ const actions = {
         commit('SET_EMAIL', response.result[0].email)
         commit('SET_ADDRESS', response.result[0].address)
         commit('SET_LASTTIME', response.result[0].last_login_time)
+        commit('SET_IMGURL', response.result[0].img_url)
         resolve(response)
       }).catch(error => {
         reject(error)
