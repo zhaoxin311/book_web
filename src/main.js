@@ -15,9 +15,11 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
-// moment.js是一个日期时间的js类库
-import moment from 'moment'
-Vue.prototype.moment = moment
+/** 公共时间过滤器 */
+import vueFilter from './utils/time-filter'
+for (const key in vueFilter) {
+  Vue.filter(key, vueFilter[key])
+}
 
 /**
  * If you don't want to use mock-server

@@ -219,15 +219,13 @@ export default {
       })
     },
     async refreshCaptcha() {
-      var moment = require('moment')
-      var create_time = moment(new Date()).format('yyyy-MM-DD HH:mm:ss')
+      var create_time = (new Date()).valueOf()
       const respones = await getImgCaptcha({ create_time: create_time }).catch(e => console.log(e))
       this.imgCaptchaData = respones.captch.captch
       this.imgCaptchaID = respones.captchID
     },
     handleLogin() {
       this.show = false
-      var moment = require('moment')
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -237,7 +235,7 @@ export default {
             captchID: this.imgCaptchaID,
             username,
             password,
-            login_time: moment(new Date()).format('yyyy-MM-DD HH:mm:ss')
+            login_time: (new Date()).valueOf()
           }
           this.$store.dispatch('user/login', param).then(response => {
             if (response.code === 200) {

@@ -23,7 +23,7 @@
               <el-descriptions-item label="备注"><el-tag size="small">{{ remark==1?'图书馆': (remark==2? '学校':'社会') }}</el-tag></el-descriptions-item>
               <el-descriptions-item label="e-mail">{{ email }}</el-descriptions-item>
               <el-descriptions-item label="联系地址">{{ address }}</el-descriptions-item>
-              <el-descriptions-item label="上次登录时间">{{ last_login_time }}</el-descriptions-item>
+              <el-descriptions-item label="上次登录时间">{{ last_login_time | timeFilter13 }}</el-descriptions-item>
             </el-descriptions>
           </div>
         </transition>
@@ -154,7 +154,6 @@ export default {
 
     // 修改个人信息弹窗赋值
     changeInfo() {
-      var moment = require('moment')
       this.ruleForm.id = this.id
       this.ruleForm.account = this.name
       this.ruleForm.department = this.department
@@ -163,7 +162,7 @@ export default {
       this.ruleForm.phone = this.phone
       this.ruleForm.email = this.email
       this.ruleForm.address = this.address
-      this.ruleForm.last_login_time = moment(new Date()).format('yyyy-MM-DD HH:mm:ss')
+      this.ruleForm.last_login_time = (new Date()).valueOf()
       this.userInfoFormVisible = true
     },
 
@@ -185,9 +184,8 @@ export default {
 
     // 提交变更后的头像文件
     avatarSubmit() {
-      var moment = require('moment')
       const params = {
-        update_time: moment(new Date()).format('yyyy-MM-DD HH:mm:ss'),
+        update_time: (new Date()).valueOf(),
         img_url: this.avatarUrl
       }
       getUpdateAvatar(params).then(res => {
