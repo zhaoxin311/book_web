@@ -242,8 +242,8 @@ export default {
         //border-color: #42b983;
         // background-color: #1885ff;
         // border-color: #1885ff;
-        background-color: #ff6102;
-        border-color: #ff6102;
+        background-color: #0A6CF2;
+        border-color: #0A6CF2;
         border-radius: 2px;
         // &::before {
         //   content: "";

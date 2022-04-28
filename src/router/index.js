@@ -67,6 +67,18 @@ export const constantRoutes = [
       meta: { title: '个人中心', icon: 'el-icon-s-home', affix: false, display: true }
     }]
   },
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user',
+    display: true,
+    children: [{
+      path: 'user',
+      name: 'User',
+      component: () => import('@/views/user/index.vue'),
+      meta: { title: '用户管理', icon: 'el-icon-s-home', affix: false, display: true }
+    }]
+  },
 
   {
     path: '/example',

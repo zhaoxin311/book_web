@@ -68,7 +68,7 @@
         <el-button size="small" @click="userInfoFormVisible = false">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改个人头像" :visible.sync="imgAvatarVisible">
+    <el-dialog title="修改个人头像" width="30%" :visible.sync="imgAvatarVisible">
       <div class="center"> <el-avatar :size="100" style=" right:0;left:0; margin: 0 auto;" :src="avatarUrl" /></div>
       <div class="center"> <input ref="upFile" accept="image/png, image/jpeg" type="file" @change="File()"></div>
 
