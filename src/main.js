@@ -11,6 +11,9 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
+import util from './api/util.js'
+
+Vue.prototype.util = util
 
 import '@/icons' // icon
 import '@/permission' // permission control

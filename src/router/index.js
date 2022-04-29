@@ -79,6 +79,18 @@ export const constantRoutes = [
       meta: { title: '用户管理', icon: 'el-icon-s-home', affix: false, display: true }
     }]
   },
+  {
+    path: '/tpyeManage',
+    component: Layout,
+    redirect: '/tpyeManage',
+    display: true,
+    children: [{
+      path: 'tpyeManage',
+      name: 'TpyeManage',
+      component: () => import('@/views/tpyeManage/index.vue'),
+      meta: { title: '类型管理', icon: 'el-icon-s-home', affix: false, display: true }
+    }]
+  },
 
   {
     path: '/example',
