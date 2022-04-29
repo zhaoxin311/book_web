@@ -3,22 +3,22 @@
     <template #header>
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="审批人">
-          <el-input v-model="formInline.user" placeholder="审批人" />
+          <el-input v-model="formInline.user" size="small" placeholder="审批人" />
         </el-form-item>
         <el-form-item label="活动区域">
-          <el-select v-model="formInline.region" placeholder="活动区域">
+          <el-select v-model="formInline.region" size="small" placeholder="活动区域">
             <el-option label="区域一" value="shanghai" />
             <el-option label="区域二" value="beijing" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button @click="mainHeight = 500">点击变高</el-button>
+          <el-button type="primary" size="small" style="float:right;" @click="onSubmit">查询</el-button>
         </el-form-item>
       </el-form>
     </template>
     <el-table
       :data="tableData"
+      border
       :height="mainHeight"
       style="width: 100%"
     >
@@ -38,29 +38,37 @@
       />
     </el-table>
     <template #footer>
-      <el-pagination
-        :current-page="currentPage"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+      <pagination
+        v-show="formData.totalRow>0"
+        :total="formData.totalRow"
+        :page.sync="formData.pageNumber"
+        :limit.sync="formData.pageSize"
       />
     </template>
   </AppContainer>
 </template>
 <script>
+import Pagination from '@/components/Pagination' // 分页
 import AppContainer from '@/components/AppContainer/AppContainer.vue'
 export default {
   components: {
+    Pagination,
     AppContainer
   },
   data() {
     return {
-      currentPage: 4,
       mainHeight: 300,
+      formData: {
+        paras: {
+          staffNumber: '',
+          staffName: '',
+          certNumber: '',
+          institutionId: ''
+        },
+        pageNumber: 1,
+        pageSize: 10,
+        totalRow: 20
+      },
       formInline: {
         user: '',
         region: ''
