@@ -27,6 +27,14 @@ const vFilter = {
       return '-'
     }
   },
+  timeFilterYMD13: function(time) {
+    if (time !== '' && time !== null && time !== undefined) {
+      const date = new Date(time)
+      return formatDate(date, 'yyyy-MM-dd')
+    } else {
+      return '-'
+    }
+  },
   formatDateYTD: function(time) {
     if (time !== '') {
       const date = new Date(time)

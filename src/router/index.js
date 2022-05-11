@@ -91,6 +91,18 @@ export const constantRoutes = [
       meta: { title: '类型管理', icon: 'el-icon-s-home', affix: false, display: true }
     }]
   },
+  {
+    path: '/bookInquire',
+    component: Layout,
+    redirect: '/bookInquire',
+    display: true,
+    children: [{
+      path: 'bookInquire',
+      name: 'BookInquire',
+      component: () => import('@/views/bookInquire/index.vue'),
+      meta: { title: '书籍检索', icon: 'el-icon-s-home', affix: false, display: true }
+    }]
+  },
 
   {
     path: '/example',
