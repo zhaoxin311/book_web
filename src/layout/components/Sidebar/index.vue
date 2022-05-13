@@ -28,10 +28,32 @@ export default {
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
-      'sidebar'
+      'sidebar',
     ]),
+    // routes() {
+    //   return this.$router.options.routes
+    // },
     routes() {
-      return this.$router.options.routes
+      const routes = this.$router.options.routes
+      // const role = JSON.parse(localStorage.getItem('data'))
+      const role = localStorage.getItem('roles')
+
+      // 递归处理
+      function dispose(routes) {
+        for (let i = 0; i < routes.length; i++) {
+          // if (routes[i].hidden) continue
+          // if (routes[i].meta === undefined) continue
+          if (routes[i].meta?.roles) {
+            const flag = routes[i].meta.roles.includes(role)
+            if (!flag) routes[i].hidden = true
+          }
+          if (routes[i].children) {
+            dispose(routes[i].children)
+          }
+        }
+      }
+      dispose(routes)
+      return routes
     },
     activeMenu() {
       const route = this.$route

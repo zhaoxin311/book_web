@@ -128,6 +128,7 @@ export default {
   },
   data() {
     return {
+      text:'ee',
       mainHeight: 0,
       dialogTitle: "添加图书信息",
       dialogType: 0, // 0:add,1:edit
@@ -273,6 +274,10 @@ export default {
       this.bookImgList.splice(0, 1, row.book_img);
       console.log(row, "toDetails");
     },
+    editType(row){
+      // localStorage.setItem('data', this.text);
+      console.log('保存成功');
+    }
   },
 };
 </script>

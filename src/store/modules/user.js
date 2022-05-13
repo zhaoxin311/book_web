@@ -63,11 +63,20 @@ const actions = {
   // user login
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
-      console.log('11333')
       login(userInfo).then(response => {
-        console.log('4411333')
         // const { data } = response.results
         console.log(response.results, 'data')
+        localStorage.setItem('data', JSON.stringify(response.results))
+        console.log(response.results.roles, 'rrr');
+        if (response.results.roles === 0) {
+          localStorage.setItem('roles', 'superadmin')
+        } else if (response.results.roles === 3) {
+          localStorage.setItem('roles', 'admin')
+        } else if (response.results.roles === 1) {
+          localStorage.setItem('roles', 'teacher')
+        } else if (response.results.roles === 2) {
+          localStorage.setItem('roles', 'student')
+        }
         commit('SET_TOKEN', response.results.token)
         setToken(response.results.token)
         resolve(response)
@@ -86,7 +95,6 @@ const actions = {
         if (!response) {
           return reject('验证失败，请重新登录')
         }
-
         commit('SET_ID', response.result[0].id)
         commit('SET_NAME', response.result[0].account)
         commit('SET_DEPARTMENT', response.result[0].department)
