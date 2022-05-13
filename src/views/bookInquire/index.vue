@@ -14,7 +14,7 @@
         <el-form-item>
           <el-button type="primary" size="small" @click="getList">查询</el-button>
           <el-button type="primary" size="small" @click="reset()">重置</el-button>
-          <el-button type="primary" size="small" @click="addBook">添加</el-button>
+          <el-button type="primary" size="small" @click="editOrAddBook()">添加</el-button>
         </el-form-item>
       </el-form>
     </template>
@@ -35,44 +35,44 @@
           {{ scope.row.publish_time | timeFilterYMD13 }}
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="250" fixed="right">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-check" size="mini" @click="editType(scope.row)">借阅</el-button>
+          <el-button type="success" icon="el-icon-check" size="mini" @click="editType(scope.row)">借阅</el-button>
+          <el-button type="primary" size="mini" @click="editOrAddBook(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="deleteBook(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <template #footer>
-      <pagination v-show="formData.totalRow>0" :total="formData.totalRow" :page.sync="formData.pageNumber" :limit.sync="formData.pageSize" @pagination="getList" />
+      <pagination v-show="formData.totalRow > 0" :total="formData.totalRow" :page.sync="formData.pageNumber" :limit.sync="formData.pageSize" @pagination="getList" />
     </template>
     <!-- 添加或编辑图书信息弹窗 -->
     <el-dialog :title="dialogTitle" width="50%" :visible.sync="addBookVisible" @close="onClose">
       <el-form ref="addForm" :model="addData" :rules="rules" size="small" label-width="98px">
         <el-form-item label="图书编号" prop="book_no">
-          <el-input v-model="addData.book_no" placeholder="请输入图书编号" clearable :style="{width: '90%'}" />
+          <el-input v-model="addData.book_no" placeholder="请输入图书编号" clearable :style="{ width: '90%' }" />
         </el-form-item>
         <el-form-item label="图书名称" prop="book_name">
-          <el-input v-model="addData.book_name" placeholder="请输入图书名称" clearable :style="{width: '90%'}" />
+          <el-input v-model="addData.book_name" placeholder="请输入图书名称" clearable :style="{ width: '90%' }" />
         </el-form-item>
         <el-form-item label="作者" prop="book_author">
-          <el-input v-model="addData.book_author" placeholder="请输入图书作者" clearable :style="{width: '90%'}" />
+          <el-input v-model="addData.book_author" placeholder="请输入图书作者" clearable :style="{ width: '90%' }" />
         </el-form-item>
         <el-form-item label="出版社" prop="book_publish">
-          <el-input v-model="addData.book_publish" placeholder="请输入出版社" clearable :style="{width: '90%'}" />
+          <el-input v-model="addData.book_publish" placeholder="请输入出版社" clearable :style="{ width: '90%' }" />
         </el-form-item>
         <el-form-item label="定价" prop="price">
-          <!-- <el-input v-model="addData.price" placeholder="请输入定价" clearable :style="{width: '90%'}" /> -->
-          <el-input-number v-model="addData.price" :precision="2" :step="0.1"></el-input-number>
+          <el-input-number v-model="addData.price" :precision="2" :step="0.1"></el-input-number><span style="margin-left:10px;">单位:（元）</span>
         </el-form-item>
         <el-form-item label="数量" prop="book_amount">
-          <!-- <el-input v-model="addData.book_amount" placeholder="请输入数量" clearable :style="{width: '90%'}" /> -->
-          <el-input-number v-model="addData.book_amount" :min="1"></el-input-number>
+          <el-input-number v-model="addData.book_amount" :min="1"></el-input-number><span style="margin-left:10px;">单位:（本）</span>
         </el-form-item>
         <el-form-item label="出版时间" prop="publish_time">
-          <!-- <el-input v-model="addData.publish_time" placeholder="请输入出版时间" clearable :style="{width: '90%'}" /> -->
-          <el-date-picker v-model="addData.publish_time" type="date" placeholder="请输入出版时间" format="yyyy 年 MM 月 dd 日" value-format="timestamp"> </el-date-picker>
+          <el-date-picker v-model="addData.publish_time" type="date" placeholder="请输入出版时间" format="yyyy 年 MM 月 dd 日" value-format="timestamp">
+          </el-date-picker>
         </el-form-item>
         <el-form-item label="图书简介" prop="introduction">
-          <el-input type="textarea" :rows="3" placeholder="请输入图书简介" v-model="addData.introduction" :style="{width: '90%'}" />
+          <el-input type="textarea" :rows="3" placeholder="请输入图书简介" v-model="addData.introduction" :style="{ width: '90%' }" />
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -86,7 +86,7 @@
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
 import rules from "./rule"; // 校验
-import { getBookList } from "@/api/book";
+import { getBookList, addBook, updateBook, deleteBook } from "@/api/book";
 export default {
   name: "TpyeManage",
   components: {
@@ -110,6 +110,7 @@ export default {
         totalRow: -1,
       },
       addData: {
+        id:'',
         book_no: "",
         book_name: "",
         book_author: "",
@@ -152,35 +153,89 @@ export default {
       this.formData = this.$options.data().formData; // 重置列表查询对象
       this.getList();
     },
-    addBook() {
+    editOrAddBook(row) {
+      if(row){
+      this.addBookVisible = true;
+      this.dialogTitle = "编辑图书信息";
+      this.dialogType = 1;
+      this.addData = { ...row };
+      }
+      else{
       this.addBookVisible = true;
       this.dialogTitle = "添加图书信息";
       this.dialogType = 0;
+      this.addData = {};
+      }
     },
     handelConfirm() {
       this.$refs["addForm"].validate((valid) => {
         if (valid) {
-          console.log(this.addData, "va");
+          if (this.dialogType === 0) {
+            this.addData = this.util.nullValueFun(this.addData);
+            const params = this.addData;
+            addBook(params)
+              .then((res) => {
+                if (res.code === 200) {
+                  this.getList();
+                  this.$message.success(res.msg);
+                  this.addBookVisible = false;
+                }
+              })
+              .catch((e) => {
+                this.$message.error(e.msg);
+              });
+          } else {
+            this.addData = this.util.nullValueFun(this.addData);
+            const params = this.addData;
+            updateBook(params)
+              .then((res) => {
+                if (res.code === 200) {
+                  this.getList();
+                  this.$message.success(res.msg);
+                  this.addBookVisible = false;
+                }
+              })
+              .catch((e) => {
+                this.$message.error(e.msg);
+              });
+            console.log("修改确认");
+          }
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
-    editType() {
-      console.log("xiugai");
-    },
-    deleteType() {
-      console.log("shanchu");
+    // 删除图书
+    deleteBook(id) {
+      this.$confirm("此操作将删除该图书, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          const params = {
+            id: id,
+          };
+          deleteBook(params).then((res) => {
+            if (res.code === 200) {
+              this.getList();
+              this.$message({ type: "success", message: "删除成功!" });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "已取消删除" });
+        });
     },
     onClose() {
       this.$refs["addForm"].resetFields();
-      this.addBookTypeVisible = false;
+      this.addBookVisible = false;
     },
   },
 };
 </script>
-<style >
+<style>
 .el-table .el-table__cell {
   padding: 5px 0;
 }

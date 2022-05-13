@@ -1,7 +1,7 @@
 const rules = {
   book_no: [
     { required: true, message: "请输入图书编号", trigger: "blur", },
-    { min: 6, message: '最小长度在 6 个字符以上', trigger: 'blur' },
+    // { min: 6, message: '最小长度在 6 个字符', trigger: 'blur' },
     // { max: 10, message: '最大长度在 10 个字符以内', trigger: 'blur' }
   ],
   book_name: [

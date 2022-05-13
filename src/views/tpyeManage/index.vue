@@ -40,16 +40,16 @@
       </el-table-column>
     </el-table>
     <template #footer>
-      <pagination v-show="formData.totalRow>0" :total="formData.totalRow" :page.sync="formData.pageNumber" :limit.sync="formData.pageSize" @pagination="getList" />
+      <pagination v-show="formData.totalRow > 0" :total="formData.totalRow" :page.sync="formData.pageNumber" :limit.sync="formData.pageSize" @pagination="getList" />
     </template>
     <!-- 添加图书类型弹窗 -->
     <el-dialog :title="dialogTitle" width="30%" :visible.sync="addBookTypeVisible" @close="onClose">
       <el-form ref="addTypeForm" :model="addTypeData" :rules="rules" size="small" label-width="98px">
         <el-form-item label="类型编号" prop="typeNo">
-          <el-input v-model="addTypeData.typeNo" placeholder="请输入类型编号" clearable :style="{width: '90%'}" />
+          <el-input v-model="addTypeData.typeNo" placeholder="请输入类型编号" clearable :style="{ width: '90%' }" />
         </el-form-item>
         <el-form-item label="类型名称" prop="typeName">
-          <el-input v-model="addTypeData.typeName" placeholder="请输入类型名称" clearable :style="{width: '90%'}" />
+          <el-input v-model="addTypeData.typeName" placeholder="请输入类型名称" clearable :style="{ width: '90%' }" />
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -231,7 +231,7 @@ export default {
   },
 };
 </script>
-<style >
+<style>
 .el-table .el-table__cell {
   padding: 5px 0;
 }

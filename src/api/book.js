@@ -44,4 +44,28 @@ export function getBookList(data) {
     data
   })
 }
+// 添加图书
+export function addBook(data) {
+  return request({
+    url: 'http://localhost:4001/book/addBook',
+    method: 'post',
+    data
+  })
+}
+// 修改图书
+export function updateBook(data) {
+  return request({
+    url: 'http://localhost:4001/book/updateBook',
+    method: 'post',
+    data
+  })
+}
 
+// 删除书籍
+export function deleteBook(params) {
+  return request({
+    url: 'http://localhost:4001/book/deleteBook',
+    method: 'get',
+    params
+  })
+}
