@@ -25,7 +25,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="book_no" label="图书编号" width="" />
-      <el-table-column prop="book_name" label="图书名称" width="" />
+      <el-table-column prop="book_name" label="图书名称" width="" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <el-link type="primary" @click="toDetails(scope.row)">{{ scope.row.book_name }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column prop="book_author" label="作者" width="" />
       <el-table-column prop="book_publish" label="出版社" width="" />
       <el-table-column prop="price" label="定价(/元)" width="80" />
@@ -80,6 +84,37 @@
         <el-button size="small" type="primary" @click="handelConfirm">确定</el-button>
       </div>
     </el-dialog>
+    <!-- 图书详情信息展示弹窗 -->
+    <el-dialog title="书籍详情" width="50%" :visible.sync="bookDetailsVisible" @close="bookDetailsVisible = false">
+      <!-- <div class="center"> <el-avatar :size="100" shape="square" icon="el-icon-picture" style=" right:0;left:0; margin: 0 auto;" :src="bookDetails.book_img" /></div> -->
+      <div class="center">
+        <el-image style="width: 140px; height: 150px" :src="bookDetails.book_img" :preview-src-list="bookImgList"></el-image>
+      </div>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span style=" font-size: 18px; font-weight: bold;">《 {{bookDetails.book_name}} 》</span>
+          <el-button type="success" icon="el-icon-check" size="mini" style="float: right;">借阅</el-button>
+        </div>
+        <div >
+          <el-descriptions>
+            <el-descriptions-item label="书籍编号">{{bookDetails.book_no}}</el-descriptions-item>
+            <el-descriptions-item label="书籍作者">{{bookDetails.book_author}}</el-descriptions-item>
+            <el-descriptions-item label="出版社">{{bookDetails.book_publish}}</el-descriptions-item>
+            <el-descriptions-item label="定价 (/元)">{{bookDetails.price}} 元</el-descriptions-item>
+            <el-descriptions-item label="数量 (/本)">{{bookDetails.book_amount}} 本</el-descriptions-item>
+            <el-descriptions-item label="出版时间"> {{ bookDetails.publish_time | timeFilterYMD13 }} </el-descriptions-item>
+            <el-descriptions-item label="图书简介">{{bookDetails.introduction}}</el-descriptions-item>
+            <!-- <el-descriptions-item label="备注">
+              <el-tag size="small">学校</el-tag>
+            </el-descriptions-item> -->
+          </el-descriptions>
+        </div>
+      </el-card>
+      <div slot="footer">
+        <!-- <el-button size="small" @click="bookDetailsVisible = false">取消</el-button> -->
+        <!-- <el-button size="small" type="primary" @click="handelConfirm">确定</el-button> -->
+      </div>
+    </el-dialog>
   </AppContainer>
 </template>
 <script>
@@ -99,6 +134,8 @@ export default {
       dialogTitle: "添加图书信息",
       dialogType: 0, // 0:add,1:edit
       addBookVisible: false, // 添加图书弹窗
+      bookDetailsVisible: false, //书籍详情弹窗
+      bookImgList: [], //大图
       formData: {
         paras: {
           book_no: "",
@@ -110,7 +147,7 @@ export default {
         totalRow: -1,
       },
       addData: {
-        id:'',
+        id: "",
         book_no: "",
         book_name: "",
         book_author: "",
@@ -123,6 +160,7 @@ export default {
       rules: { ...rules },
 
       tableData: [],
+      bookDetails: {},
     };
   },
   /* 进入页面就调用*/
@@ -154,17 +192,16 @@ export default {
       this.getList();
     },
     editOrAddBook(row) {
-      if(row){
-      this.addBookVisible = true;
-      this.dialogTitle = "编辑图书信息";
-      this.dialogType = 1;
-      this.addData = { ...row };
-      }
-      else{
-      this.addBookVisible = true;
-      this.dialogTitle = "添加图书信息";
-      this.dialogType = 0;
-      this.addData = {};
+      if (row) {
+        this.addBookVisible = true;
+        this.dialogTitle = "编辑图书信息";
+        this.dialogType = 1;
+        this.addData = { ...row };
+      } else {
+        this.addBookVisible = true;
+        this.dialogTitle = "添加图书信息";
+        this.dialogType = 0;
+        this.addData = {};
       }
     },
     handelConfirm() {
@@ -232,11 +269,22 @@ export default {
       this.$refs["addForm"].resetFields();
       this.addBookVisible = false;
     },
+    toDetails(row) {
+      this.bookDetailsVisible = true;
+      this.bookDetails = { ...row };
+      this.bookImgList.splice(0, 1, row.book_img);
+      console.log(row, "toDetails");
+    },
   },
 };
 </script>
 <style>
 .el-table .el-table__cell {
   padding: 5px 0;
+}
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
