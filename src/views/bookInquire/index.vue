@@ -90,12 +90,11 @@
       <div class="center">
         <el-image style="width: 140px; height: 150px" :src="bookDetails.book_img" :preview-src-list="bookImgList"></el-image>
       </div>
-      <el-card class="box-card">
+      <el-card class="box-card" style="margin-top:20px;">
         <div slot="header" class="clearfix">
           <span style=" font-size: 18px; font-weight: bold;">《 {{bookDetails.book_name}} 》</span>
           <el-button type="success" icon="el-icon-check" size="mini" style="float: right;">借阅</el-button>
         </div>
-        <div >
           <el-descriptions>
             <el-descriptions-item label="书籍编号">{{bookDetails.book_no}}</el-descriptions-item>
             <el-descriptions-item label="书籍作者">{{bookDetails.book_author}}</el-descriptions-item>
@@ -108,7 +107,6 @@
               <el-tag size="small">学校</el-tag>
             </el-descriptions-item> -->
           </el-descriptions>
-        </div>
       </el-card>
       <div slot="footer">
         <!-- <el-button size="small" @click="bookDetailsVisible = false">取消</el-button> -->
