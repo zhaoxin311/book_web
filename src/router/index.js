@@ -76,7 +76,7 @@ export const constantRoutes = [
       path: 'user',
       name: 'User',
       component: () => import('@/views/user/index.vue'),
-      meta: { title: '用户管理', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','teacher'] }
+      meta: { title: '用户管理', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin'] }
     }]
   },
   {
@@ -100,7 +100,7 @@ export const constantRoutes = [
       path: 'bookInquire',
       name: 'BookInquire',
       component: () => import('@/views/bookInquire/index.vue'),
-      meta: { title: '书籍检索', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin','teacher','student'] }
+      meta: { title: '书籍检索', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin','user'] }
     }]
   },
 

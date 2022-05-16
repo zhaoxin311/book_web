@@ -24,17 +24,17 @@
           {{ (formData.pageNumber - 1) * formData.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="book_no" label="图书编号" width="" />
+      <el-table-column prop="book_no" label="图书编号" width="80" />
       <el-table-column prop="book_name" label="图书名称" width="" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <el-link type="primary" @click="toDetails(scope.row)">{{ scope.row.book_name }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="book_author" label="作者" width="" />
-      <el-table-column prop="book_publish" label="出版社" width="" />
+      <el-table-column prop="book_author" label="作者" width="150" :show-overflow-tooltip="true"/>
+      <el-table-column prop="book_publish" label="出版社" width="" :show-overflow-tooltip="true"/>
       <el-table-column prop="price" label="定价(/元)" width="80" />
-      <el-table-column prop="book_amount" label="数量(/本)" width="80" />
-      <el-table-column label="出版时间" :show-overflow-tooltip="true">
+      <el-table-column prop="book_amount" label="数量(/本)" width="80" :show-overflow-tooltip="true"/>
+      <el-table-column label="出版时间" width="150">
         <template slot-scope="scope">
           {{ scope.row.publish_time | timeFilterYMD13 }}
         </template>
@@ -43,7 +43,8 @@
         <template slot-scope="scope">
           <el-button type="success" icon="el-icon-check" size="mini" @click="editType(scope.row)">借阅</el-button>
           <el-button type="primary" size="mini" @click="editOrAddBook(scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="deleteBook(scope.row.id)">删除</el-button>
+          <!-- <el-button type="danger" size="mini" @click="deleteBook(scope.row.id)">删除</el-button> -->
+          <el-button v-if="role()" type="danger" size="mini" @click="deleteBook(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -88,7 +89,7 @@
     <el-dialog title="书籍详情" width="50%" :visible.sync="bookDetailsVisible" @close="bookDetailsVisible = false">
       <!-- <div class="center"> <el-avatar :size="100" shape="square" icon="el-icon-picture" style=" right:0;left:0; margin: 0 auto;" :src="bookDetails.book_img" /></div> -->
       <div class="center">
-        <el-image style="width: 140px; height: 150px" :src="bookDetails.book_img" :preview-src-list="bookImgList"></el-image>
+        <el-image style="width: 140px; height: 150px;" :src="bookDetails.book_img" :preview-src-list="bookImgList"></el-image>
       </div>
       <el-card class="box-card" style="margin-top:20px;">
         <div slot="header" class="clearfix">
@@ -116,6 +117,7 @@
   </AppContainer>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
 import rules from "./rule"; // 校验
@@ -161,6 +163,11 @@ export default {
       tableData: [],
       bookDetails: {},
     };
+  },
+    computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   /* 进入页面就调用*/
   // mounted() {
@@ -277,11 +284,15 @@ export default {
     editType(row){
       // localStorage.setItem('data', this.text);
       console.log('保存成功');
+    },
+    role(){
+      if ([0,1].includes(this.roles)) {return true}
+      else {return false}
     }
   },
 };
 </script>
-<style>
+<style scoped lang="scss">
 .el-table .el-table__cell {
   padding: 5px 0;
 }
@@ -289,5 +300,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+::v-deep{
+  .el-image__preview {
+    object-fit: contain;
+}
 }
 </style>

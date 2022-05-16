@@ -70,12 +70,10 @@ const actions = {
         console.log(response.results.roles, 'rrr');
         if (response.results.roles === 0) {
           localStorage.setItem('roles', 'superadmin')
-        } else if (response.results.roles === 3) {
-          localStorage.setItem('roles', 'admin')
         } else if (response.results.roles === 1) {
-          localStorage.setItem('roles', 'teacher')
+          localStorage.setItem('roles', 'admin')
         } else if (response.results.roles === 2) {
-          localStorage.setItem('roles', 'student')
+          localStorage.setItem('roles', 'user')
         }
         commit('SET_TOKEN', response.results.token)
         setToken(response.results.token)

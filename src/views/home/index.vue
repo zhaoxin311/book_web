@@ -1,7 +1,9 @@
 <template>
   <AppContainer :main-height.sync="mainHeight">
     <div class="dashboard-container">
-      <div class="dashboard-text">name: {{ name }}</div>
+      <div class="dashboard-text">name: {{ name }} </div>
+      <div class="dashboard-text">create_time: {{ create_time }} </div>
+      <div class="dashboard-text">roles: {{ roles }} </div>
     </div>
   </AppContainer>
 </template>
@@ -23,7 +25,8 @@ export default {
   computed: {
     ...mapGetters([
       'name',
-      'create_time'
+      'create_time',
+      'roles'
     ])
   }
 }
