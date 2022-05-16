@@ -103,7 +103,19 @@ export const constantRoutes = [
       meta: { title: '书籍检索', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin','user'] }
     }]
   },
-
+  
+  {
+    path: '/bookBorrow',
+    component: Layout,
+    redirect: '/bookBorrow',
+    display: true,
+    children: [{
+      path: 'bookBorrow',
+      name: 'BookBorrow',
+      component: () => import('@/views/bookBorrow/index.vue'),
+      meta: { title: '我的借阅', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin','user'] }
+    }]
+  },
   {
     path: '/example',
     component: Layout,

@@ -44,6 +44,7 @@ export function getBookList(data) {
     data
   })
 }
+
 // 添加图书
 export function addBook(data) {
   return request({
@@ -67,5 +68,22 @@ export function deleteBook(params) {
     url: 'http://localhost:4001/book/deleteBook',
     method: 'get',
     params
+  })
+}
+
+// 获取借阅图书列表
+export function getBorrowBookList(data) {
+  return request({
+    url: 'http://localhost:4001/book/getBorrowBookList',
+    method: 'post',
+    data
+  })
+}
+// 添加图书到我的借阅
+export function addBorrowBook(data) {
+  return request({
+    url: 'http://localhost:4001/book/addBorrowBook',
+    method: 'post',
+    data
   })
 }

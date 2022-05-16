@@ -41,7 +41,7 @@
       </el-table-column>
       <el-table-column label="操作" width="250" fixed="right">
         <template slot-scope="scope">
-          <el-button type="success" icon="el-icon-check" size="mini" @click="editType(scope.row)">借阅</el-button>
+          <el-button type="success" icon="el-icon-check" size="mini" @click="borrow(scope.row)">借阅</el-button>
           <el-button type="primary" size="mini" @click="editOrAddBook(scope.row)">编辑</el-button>
           <!-- <el-button type="danger" size="mini" @click="deleteBook(scope.row.id)">删除</el-button> -->
           <el-button v-if="role()" type="danger" size="mini" @click="deleteBook(scope.row.id)">删除</el-button>
@@ -121,7 +121,7 @@ import { mapGetters } from 'vuex'
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
 import rules from "./rule"; // 校验
-import { getBookList, addBook, updateBook, deleteBook } from "@/api/book";
+import { getBookList, addBook, updateBook, deleteBook, addBorrowBook} from "@/api/book";
 export default {
   name: "TpyeManage",
   components: {
@@ -281,9 +281,32 @@ export default {
       this.bookImgList.splice(0, 1, row.book_img);
       console.log(row, "toDetails");
     },
-    editType(row){
-      // localStorage.setItem('data', this.text);
-      console.log('保存成功');
+    // 借阅图书
+    borrow(row){
+      var curTime = new Date().getTime();
+      var returnDate = curTime + (30 * 3600 * 24 * 1000);
+      this.$confirm("确认是否借阅该图书, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          const params = {
+            book_no: row.book_no, 
+            book_name: row.book_name, 
+            borrow_time: (new Date()).valueOf(), 
+            return_time: returnDate,
+          };
+          addBorrowBook(params).then((res) => {
+            if (res.code === 200) {
+              this.getList();
+              this.$message({ type: "success", message: "借阅成功!" });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "已取消借阅" });
+        });
     },
     role(){
       if ([0,1].includes(this.roles)) {return true}
