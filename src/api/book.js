@@ -79,6 +79,14 @@ export function getBorrowBookList(data) {
     data
   })
 }
+// 获取管理员租借管理列表
+export function getRentalManageList(data) {
+  return request({
+    url: 'http://localhost:4001/admin/book/getRentalManageList',
+    method: 'post',
+    data
+  })
+}
 // 添加图书到我的借阅
 export function addBorrowBook(data) {
   return request({
@@ -91,6 +99,22 @@ export function addBorrowBook(data) {
 export function returnBook(params) {
   return request({
     url: 'http://localhost:4001/book/returnBook',
+    method: 'get',
+    params
+  })
+}
+// 管理员确认租借图书
+export function confirmBorrow(params) {
+  return request({
+    url: 'http://localhost:4001/admin/book/confirmBorrow',
+    method: 'get',
+    params
+  })
+}
+// 管理员确认归还图书
+export function confirmReturn(params) {
+  return request({
+    url: 'http://localhost:4001/admin/book/confirmReturn',
     method: 'get',
     params
   })

@@ -117,6 +117,18 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/rentalManage',
+    component: Layout,
+    redirect: '/rentalManage',
+    display: true,
+    children: [{
+      path: 'rentalManage',
+      name: 'RentalManage',
+      component: () => import('@/views/rentalManage/index.vue'),
+      meta: { title: '租借管理', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin'] }
+    }]
+  },
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',

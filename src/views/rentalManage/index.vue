@@ -23,7 +23,6 @@
           {{ (formData.pageNumber - 1) * formData.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="borrower" label="借阅人" width="" />
       <el-table-column prop="book_no" label="图书编号" width="" />
       <el-table-column prop="book_name" label="图书名称" width="" />
       <el-table-column label="借书时间" width="180">
@@ -41,16 +40,17 @@
           {{ scope.row.operate_time | timeFilter13 }}
         </template>
       </el-table-column>
+      <el-table-column prop="borrower" label="借阅人" width="" />
       <el-table-column prop="state" label="状态" width="">
         <template slot-scope="scope">
           {{ states[scope.row.state] }}
-          <!-- {{ scope.row.state | states }} -->
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.state==1" type="success" size="mini" @click="returnBook(scope.row)">归还</el-button>
-          <el-button v-if="scope.row.state==3" type="warning" size="mini" @click="continueBook(scope.row)">续借</el-button>
+          <el-button v-if="scope.row.state==0" type="success" size="mini" @click="confirmBorrow(scope.row)">确认租借</el-button>
+          <el-button v-if="scope.row.state==2" type="warning" size="mini" @click="confirmReturn(scope.row)">确认归还</el-button>
+          <el-button v-if="scope.row.state==4" type="primary" size="mini" @click="confirmContinue(scope.row)">确认续借</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -62,24 +62,13 @@
 <script>
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
-import { getBorrowBookList, returnBook } from "@/api/book";
+import { getRentalManageList, confirmReturn,confirmBorrow } from "@/api/book";
 export default {
   name: "TpyeManage",
   components: {
     Pagination,
     AppContainer,
   },
-  // filters:{
-  //   states(status){
-  //     var statusMap = ''
-  //   if (status === 1) statusMap = '借阅中'
-  // 	if (status === 2) statusMap = '等待归还审核'
-  // 	if (status === 3) statusMap = '借阅已超时'
-  // 	if (status === 4) statusMap = '等待续借审核'
-  // 	if (status === 5) statusMap = '已归还'
-  //   return statusMap
-  //   }
-  // },
   data() {
     return {
       mainHeight: 0,
@@ -123,7 +112,7 @@ export default {
     // 查询
     async getList() {
       this.formData.paras = this.util.nullValueFun(this.formData.paras);
-      await getBorrowBookList(this.formData).then((res) => {
+      await getRentalManageList(this.formData).then((res) => {
         this.tableData = res.result;
         this.formData.totalRow = res.totalRow;
         console.log(this.tableData);
@@ -133,8 +122,8 @@ export default {
       this.formData = this.$options.data().formData; // 重置列表查询对象
       this.getList();
     },
-    returnBook(row) {
-      this.$confirm("确认是否归还该图书, 是否继续?", "提示", {
+    confirmBorrow(row) {
+      this.$confirm("确认借出该图书, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -144,10 +133,32 @@ export default {
             id: row.id,
             operate_time: (new Date()).valueOf(), 
           };
-          returnBook(params).then((res) => {
+          confirmBorrow(params).then((res) => {
             if (res.code === 200) {
               this.getList();
-              this.$message({ type: "success", message: "已提交请求，等待管理员归还审核!" });
+              this.$message({ type: "success", message: "已成功借出图书" });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "已取消借出图书" });
+        });
+    },
+    confirmReturn(row) {
+      this.$confirm("确认归还该图书, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          const params = {
+            id: row.id,
+            operate_time: (new Date()).valueOf(), 
+          };
+          confirmReturn(params).then((res) => {
+            if (res.code === 200) {
+              this.getList();
+              this.$message({ type: "success", message: "已成功归还图书" });
             }
           });
         })
@@ -155,7 +166,7 @@ export default {
           this.$message({ type: "info", message: "已取消归还图书" });
         });
     },
-    continueBook() {
+    confirmContinue() {
       console.log("shanchu");
     },
   },
