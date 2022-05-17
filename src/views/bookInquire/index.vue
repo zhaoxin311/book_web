@@ -292,6 +292,7 @@ export default {
       })
         .then(() => {
           const params = {
+            id: row.id,
             book_no: row.book_no, 
             book_name: row.book_name, 
             borrow_time: (new Date()).valueOf(), 

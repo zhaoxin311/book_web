@@ -44,8 +44,8 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="editType(scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="deleteType(scope.row)">删除</el-button>
+          <el-button v-if="scope.row.state==1" type="success" size="mini" @click="returnBook(scope.row)">归还</el-button>
+          <el-button v-if="scope.row.state==3" type="warning" size="mini" @click="continueBook(scope.row)">续借</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -57,7 +57,7 @@
 <script>
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
-import { getBorrowBookList } from "@/api/book";
+import { getBorrowBookList, returnBook } from "@/api/book";
 export default {
   name: "TpyeManage",
   components: {
@@ -127,10 +127,28 @@ export default {
       this.formData = this.$options.data().formData; // 重置列表查询对象
       this.getList();
     },
-    editType() {
-      console.log("xiugai");
+    returnBook(row) {
+      this.$confirm("确认是否归还该图书, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          const params = {
+            id: row.id,
+          };
+          returnBook(params).then((res) => {
+            if (res.code === 200) {
+              this.getList();
+              this.$message({ type: "success", message: "已提交请求，等待管理员归还审核!" });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "已取消归还图书" });
+        });
     },
-    deleteType() {
+    continueBook() {
       console.log("shanchu");
     },
   },

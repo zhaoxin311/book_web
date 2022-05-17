@@ -87,3 +87,11 @@ export function addBorrowBook(data) {
     data
   })
 }
+// 归还图书
+export function returnBook(params) {
+  return request({
+    url: 'http://localhost:4001/book/returnBook',
+    method: 'get',
+    params
+  })
+}
