@@ -25,7 +25,7 @@
       </el-table-column>
       <el-table-column prop="borrower" label="借阅人" width="" />
       <el-table-column prop="book_no" label="图书编号" width="" />
-      <el-table-column prop="book_name" label="图书名称" width="" />
+      <el-table-column prop="book_name" label="图书名称" width="160" :show-overflow-tooltip="true" />
       <el-table-column label="借书时间" width="180">
         <template slot-scope="scope">
           {{ scope.row.borrow_time | timeFilter13 }}
@@ -41,7 +41,7 @@
           {{ scope.row.operate_time | timeFilter13 }}
         </template>
       </el-table-column>
-      <el-table-column prop="state" label="状态" width="">
+      <el-table-column prop="state" label="状态" width="120">
         <template slot-scope="scope">
           {{ states[scope.row.state] }}
           <!-- {{ scope.row.state | states }} -->
@@ -124,7 +124,7 @@ export default {
     async getList() {
       this.formData.paras = this.util.nullValueFun(this.formData.paras);
       await getBorrowBookList(this.formData).then((res) => {
-        this.tableData = res.result;
+        this.tableData = res.result[0];
         this.formData.totalRow = res.totalRow;
         console.log(this.tableData);
       });

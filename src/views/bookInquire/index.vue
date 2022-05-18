@@ -25,7 +25,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="book_no" label="图书编号" width="80" />
-      <el-table-column prop="book_name" label="图书名称" width="" :show-overflow-tooltip="true">
+      <el-table-column prop="book_name" label="图书名称" width="160" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <el-link type="primary" @click="toDetails(scope.row)">{{ scope.row.book_name }}</el-link>
         </template>
@@ -94,7 +94,7 @@
       <el-card class="box-card" style="margin-top:20px;">
         <div slot="header" class="clearfix">
           <span style=" font-size: 18px; font-weight: bold;">《 {{bookDetails.book_name}} 》</span>
-          <el-button type="success" icon="el-icon-check" size="mini" style="float: right;">借阅</el-button>
+          <el-button  v-if="bookDetails.book_amount != 0" type="success" icon="el-icon-check" size="mini" style="float: right;" @click="borrow(bookDetails)">借阅</el-button>
         </div>
           <el-descriptions>
             <el-descriptions-item label="书籍编号">{{bookDetails.book_no}}</el-descriptions-item>
@@ -284,7 +284,7 @@ export default {
     // 借阅图书
     borrow(row){
       var curTime = new Date().getTime();
-      var returnDate = curTime + (30 * 3600 * 24 * 1000);
+      var returnDate = curTime + (1 * 3600 * 24 * 1000);
       this.$confirm("确认是否借阅该图书, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -300,6 +300,7 @@ export default {
           };
           addBorrowBook(params).then((res) => {
             if (res.code === 200) {
+              this.bookDetailsVisible = false
               this.getList();
               this.$message({ type: "success", message: "借阅成功!" });
             }
