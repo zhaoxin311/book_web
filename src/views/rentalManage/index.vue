@@ -145,6 +145,7 @@ export default {
         });
     },
     confirmReturn(row) {
+      console.log(row);
       this.$confirm("确认归还该图书, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -153,6 +154,7 @@ export default {
         .then(() => {
           const params = {
             id: row.id,
+            book_no: row.book_no,
             operate_time: (new Date()).valueOf(), 
           };
           confirmReturn(params).then((res) => {

@@ -41,7 +41,7 @@
       </el-table-column>
       <el-table-column label="操作" width="250" fixed="right">
         <template slot-scope="scope">
-          <el-button type="success" icon="el-icon-check" size="mini" @click="borrow(scope.row)">借阅</el-button>
+          <el-button v-if="scope.row.book_amount != 0" type="success" icon="el-icon-check" size="mini" @click="borrow(scope.row)">借阅</el-button>
           <el-button type="primary" size="mini" @click="editOrAddBook(scope.row)">编辑</el-button>
           <!-- <el-button type="danger" size="mini" @click="deleteBook(scope.row.id)">删除</el-button> -->
           <el-button v-if="role()" type="danger" size="mini" @click="deleteBook(scope.row.id)">删除</el-button>
