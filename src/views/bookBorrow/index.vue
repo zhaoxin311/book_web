@@ -57,12 +57,41 @@
     <template #footer>
       <pagination v-show="formData.totalRow>0" :total="formData.totalRow" :page.sync="formData.pageNumber" :limit.sync="formData.pageSize" @pagination="getList" />
     </template>
+    <!-- 续借弹窗图书信息展示 -->
+    <el-dialog title="续借书籍" width="50%" :visible.sync="continueBookVisible" @close="continueBookVisible = false">
+      <!-- <div class="center"> <el-avatar :size="100" shape="square" icon="el-icon-picture" style=" right:0;left:0; margin: 0 auto;" :src="bookDetails.book_img" /></div> -->
+      <!-- <div class="center">
+        <el-image style="width: 140px; height: 150px;" :src="bookDetails.book_img"></el-image>
+      </div> -->
+      <el-card class="box-card" style="margin-top:20px;">
+        <div slot="header" class="clearfix">
+          <span style=" font-size: 18px; font-weight: bold;">《 {{bookDetails.book_name}} 》</span>
+          <el-button  v-if="bookDetails.book_amount != 0" type="primary" size="mini" style="float: right;" @click="confirmContinueBook(bookDetails)">确认续借</el-button>
+        </div>
+          <el-descriptions>
+            <el-descriptions-item label="书籍编号">{{bookDetails.book_no}}</el-descriptions-item>
+            <el-descriptions-item label="租借人"> {{ bookDetails.borrower }} </el-descriptions-item>
+            <el-descriptions-item label="租借时间"> {{ bookDetails.borrow_time | timeFilterYMD13 }} </el-descriptions-item>
+            <el-descriptions-item label="还书时间"> {{ bookDetails.return_time | timeFilterYMD13 }} </el-descriptions-item>
+            <el-descriptions-item label="当前状态" :span="2">
+              <el-tag type="danger" size="small">已逾期</el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="续借时长">
+              <el-input-number v-model="continueDay" size="mini" :min="10" :max="100"></el-input-number>（单位：天）
+            </el-descriptions-item>
+          </el-descriptions>
+      </el-card>
+      <div slot="footer">
+        <!-- <el-button size="small" @click="bookDetailsVisible = false">取消</el-button> -->
+        <!-- <el-button size="small" type="primary" @click="handelConfirm">确定</el-button> -->
+      </div>
+    </el-dialog>
   </AppContainer>
 </template>
 <script>
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
-import { getBorrowBookList, returnBook } from "@/api/book";
+import { getBorrowBookList, returnBook, continueBorrow } from "@/api/book";
 export default {
   name: "TpyeManage",
   components: {
@@ -83,6 +112,9 @@ export default {
   data() {
     return {
       mainHeight: 0,
+      continueBookVisible: false,//续借弹窗
+      bookDetails:{},
+      continueDay:10,
       formData: {
         paras: {
           book_no: "",
@@ -124,7 +156,7 @@ export default {
     async getList() {
       this.formData.paras = this.util.nullValueFun(this.formData.paras);
       await getBorrowBookList(this.formData).then((res) => {
-        this.tableData = res.result[0];
+        this.tableData = res.result;
         this.formData.totalRow = res.totalRow;
         console.log(this.tableData);
       });
@@ -155,9 +187,25 @@ export default {
           this.$message({ type: "info", message: "已取消归还图书" });
         });
     },
-    continueBook() {
-      console.log("shanchu");
+    continueBook(row) {
+      this.continueBookVisible = true
+      this.bookDetails = { ...row };
+      console.log(row, "toDetails");
     },
+    confirmContinueBook(row){
+      console.log(this.continueDay,'day');
+      const params = {
+        id: row.id,
+        continueDay: this.continueDay
+      }
+      continueBorrow(params).then((res) => {
+        if (res.code === 200) {
+          this.continueBookVisible = false
+          this.getList();
+          this.$message({ type: "success", message: "已提交请求，等待管理员归还审核!" });
+        }
+      });
+    }
   },
 };
 </script>

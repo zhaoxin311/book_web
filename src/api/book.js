@@ -103,6 +103,16 @@ export function returnBook(params) {
     params
   })
 }
+
+// 续租图书
+export function continueBorrow(data) {
+  return request({
+    url: 'http://localhost:4001/book/continueBorrow',
+    method: 'post',
+    data
+  })
+}
+
 // 管理员确认租借图书
 export function confirmBorrow(params) {
   return request({
@@ -115,6 +125,14 @@ export function confirmBorrow(params) {
 export function confirmReturn(params) {
   return request({
     url: 'http://localhost:4001/admin/book/confirmReturn',
+    method: 'get',
+    params
+  })
+}
+// 管理员确认续租图书
+export function confirmContinue(params) {
+  return request({
+    url: 'http://localhost:4001/admin/book/confirmContinue',
     method: 'get',
     params
   })

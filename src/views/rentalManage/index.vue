@@ -62,7 +62,7 @@
 <script>
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
-import { getRentalManageList, confirmReturn,confirmBorrow } from "@/api/book";
+import { getRentalManageList, confirmReturn,confirmBorrow,confirmContinue } from "@/api/book";
 export default {
   name: "TpyeManage",
   components: {
@@ -168,8 +168,26 @@ export default {
           this.$message({ type: "info", message: "已取消归还图书" });
         });
     },
-    confirmContinue() {
-      console.log("shanchu");
+    confirmContinue(row) {
+      this.$confirm("确认同意续租该图书, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          const params = {
+            id: row.id,
+          };
+          confirmContinue(params).then((res) => {
+            if (res.code === 200) {
+              this.getList();
+              this.$message({ type: "success", message: "已成功续租图书" });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "已取消续租图书" });
+        });
     },
   },
 };
