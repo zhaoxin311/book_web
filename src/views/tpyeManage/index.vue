@@ -22,12 +22,12 @@
       </el-table-column>
       <el-table-column prop="typeNo" label="类型编号" width="" />
       <el-table-column prop="typeName" label="类型名称" width="" />
-      <el-table-column label="创建时间" :show-overflow-tooltip="true">
+      <el-table-column label="创建时间" width="" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           {{ scope.row.create_time | timeFilter13 }}
         </template>
       </el-table-column>
-      <el-table-column label="修改时间" :show-overflow-tooltip="true">
+      <el-table-column label="修改时间" width="" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           {{ scope.row.update_time | timeFilter13 }}
         </template>

@@ -10,6 +10,9 @@ const rules = {
   book_author: [
     { required: true, message: "请输入图书作者", trigger: "blur", },
   ],
+  book_type: [
+    { required: true, message: "请选择图书类型", trigger: "blur", },
+  ],
   book_publish: [
     { required: true, message: "请输入出版社", trigger: "blur", },
   ],

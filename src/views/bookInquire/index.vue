@@ -30,11 +30,12 @@
           <el-link type="primary" @click="toDetails(scope.row)">{{ scope.row.book_name }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="book_author" label="作者" width="150" :show-overflow-tooltip="true"/>
-      <el-table-column prop="book_publish" label="出版社" width="" :show-overflow-tooltip="true"/>
+      <el-table-column prop="book_type" label="图书类型" width="" :show-overflow-tooltip="true" />
+      <el-table-column prop="book_author" label="作者" width="150" :show-overflow-tooltip="true" />
+      <el-table-column prop="book_publish" label="出版社" width="" :show-overflow-tooltip="true" />
       <el-table-column prop="price" label="定价(/元)" width="80" />
-      <el-table-column prop="book_amount" label="数量(/本)" width="80" :show-overflow-tooltip="true"/>
-      <el-table-column label="出版时间" width="150">
+      <el-table-column prop="book_amount" label="数量(/本)" width="80" :show-overflow-tooltip="true" />
+      <el-table-column label="出版时间" width="100">
         <template slot-scope="scope">
           {{ scope.row.publish_time | timeFilterYMD13 }}
         </template>
@@ -59,6 +60,12 @@
         </el-form-item>
         <el-form-item label="图书名称" prop="book_name">
           <el-input v-model="addData.book_name" placeholder="请输入图书名称" clearable :style="{ width: '90%' }" />
+        </el-form-item>
+        <el-form-item label="图书类型" prop="book_type">
+          <el-select v-model="addData.book_type" filterable placeholder="请选择">
+            <el-option v-for="(item, index) in typeOptions" :key="index" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="作者" prop="book_author">
           <el-input v-model="addData.book_author" placeholder="请输入图书作者" clearable :style="{ width: '90%' }" />
@@ -94,20 +101,20 @@
       <el-card class="box-card" style="margin-top:20px;">
         <div slot="header" class="clearfix">
           <span style=" font-size: 18px; font-weight: bold;">《 {{bookDetails.book_name}} 》</span>
-          <el-button  v-if="bookDetails.book_amount != 0" type="success" icon="el-icon-check" size="mini" style="float: right;" @click="borrow(bookDetails)">借阅</el-button>
+          <el-button v-if="bookDetails.book_amount != 0" type="success" icon="el-icon-check" size="mini" style="float: right;" @click="borrow(bookDetails)">借阅</el-button>
         </div>
-          <el-descriptions>
-            <el-descriptions-item label="书籍编号">{{bookDetails.book_no}}</el-descriptions-item>
-            <el-descriptions-item label="书籍作者">{{bookDetails.book_author}}</el-descriptions-item>
-            <el-descriptions-item label="出版社">{{bookDetails.book_publish}}</el-descriptions-item>
-            <el-descriptions-item label="定价 (/元)">{{bookDetails.price}} 元</el-descriptions-item>
-            <el-descriptions-item label="数量 (/本)">{{bookDetails.book_amount}} 本</el-descriptions-item>
-            <el-descriptions-item label="出版时间"> {{ bookDetails.publish_time | timeFilterYMD13 }} </el-descriptions-item>
-            <el-descriptions-item label="图书简介">{{bookDetails.introduction}}</el-descriptions-item>
-            <!-- <el-descriptions-item label="备注">
+        <el-descriptions>
+          <el-descriptions-item label="书籍编号">{{bookDetails.book_no}}</el-descriptions-item>
+          <el-descriptions-item label="书籍作者">{{bookDetails.book_author}}</el-descriptions-item>
+          <el-descriptions-item label="出版社">{{bookDetails.book_publish}}</el-descriptions-item>
+          <el-descriptions-item label="定价 (/元)">{{bookDetails.price}} 元</el-descriptions-item>
+          <el-descriptions-item label="数量 (/本)">{{bookDetails.book_amount}} 本</el-descriptions-item>
+          <el-descriptions-item label="出版时间"> {{ bookDetails.publish_time | timeFilterYMD13 }} </el-descriptions-item>
+          <el-descriptions-item label="图书简介">{{bookDetails.introduction}}</el-descriptions-item>
+          <!-- <el-descriptions-item label="备注">
               <el-tag size="small">学校</el-tag>
             </el-descriptions-item> -->
-          </el-descriptions>
+        </el-descriptions>
       </el-card>
       <div slot="footer">
         <!-- <el-button size="small" @click="bookDetailsVisible = false">取消</el-button> -->
@@ -117,11 +124,11 @@
   </AppContainer>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
 import rules from "./rule"; // 校验
-import { getBookList, addBook, updateBook, deleteBook, addBorrowBook} from "@/api/book";
+import { getBookList, addBook, updateBook, deleteBook, addBorrowBook, getBookType } from "@/api/book";
 export default {
   name: "TpyeManage",
   components: {
@@ -130,7 +137,6 @@ export default {
   },
   data() {
     return {
-      text:'ee',
       mainHeight: 0,
       dialogTitle: "添加图书信息",
       dialogType: 0, // 0:add,1:edit
@@ -152,6 +158,7 @@ export default {
         book_no: "",
         book_name: "",
         book_author: "",
+        book_type: "",
         book_amount: 1,
         price: 0,
         book_publish: "",
@@ -162,12 +169,11 @@ export default {
 
       tableData: [],
       bookDetails: {},
+      typeOptions:[],
     };
   },
-    computed: {
-    ...mapGetters([
-      'roles'
-    ])
+  computed: {
+    ...mapGetters(["roles"]),
   },
   /* 进入页面就调用*/
   // mounted() {
@@ -182,6 +188,7 @@ export default {
     /**  分页默认从第一页开始 */
     this.formData.pageNumber = 1;
     this.getList();
+    this.getBookType()
   },
   methods: {
     // 查询
@@ -282,9 +289,9 @@ export default {
       console.log(row, "toDetails");
     },
     // 借阅图书
-    borrow(row){
+    borrow(row) {
       var curTime = new Date().getTime();
-      var returnDate = curTime + (1 * 3600 * 24 * 1000);
+      var returnDate = curTime + 1 * 3600 * 24 * 1000;
       this.$confirm("确认是否借阅该图书, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -293,14 +300,14 @@ export default {
         .then(() => {
           const params = {
             id: row.id,
-            book_no: row.book_no, 
-            book_name: row.book_name, 
-            borrow_time: (new Date()).valueOf(), 
+            book_no: row.book_no,
+            book_name: row.book_name,
+            borrow_time: new Date().valueOf(),
             return_time: returnDate,
           };
           addBorrowBook(params).then((res) => {
             if (res.code === 200) {
-              this.bookDetailsVisible = false
+              this.bookDetailsVisible = false;
               this.getList();
               this.$message({ type: "success", message: "借阅成功!" });
             }
@@ -310,9 +317,27 @@ export default {
           this.$message({ type: "info", message: "已取消借阅" });
         });
     },
-    role(){
-      if ([0,1].includes(this.roles)) {return true}
-      else {return false}
+    // 角色权限
+    role() {
+      if ([0, 1].includes(this.roles)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    // 获取书籍类型菜单
+    getBookType(){
+      this.formData.paras = this.util.nullValueFun(this.formData.paras);
+      getBookType(this.formData).then((res) => {
+        console.log(res,'res');
+        res.result.forEach(item => {
+          this.typeOptions.push({
+          value: item.typeName,
+          label: item.typeNo + "--" + item.typeName
+          })
+        })
+      });
     }
   },
 };
@@ -326,9 +351,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
-::v-deep{
+::v-deep {
   .el-image__preview {
     object-fit: contain;
-}
+  }
 }
 </style>

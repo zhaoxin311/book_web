@@ -25,28 +25,29 @@
       </el-table-column>
       <el-table-column prop="book_no" label="图书编号" width="" />
       <el-table-column prop="book_name" label="图书名称" width="160" :show-overflow-tooltip="true" />
-      <el-table-column label="借书时间" width="180">
+      <!-- <el-table-column prop="book_type" label="图书类型" width="" :show-overflow-tooltip="true" /> -->
+      <el-table-column label="借书时间" width="160">
         <template slot-scope="scope">
           {{ scope.row.borrow_time | timeFilter13 }}
         </template>
       </el-table-column>
-      <el-table-column label="还书时间" width="180">
+      <el-table-column label="还书时间" width="160">
         <template slot-scope="scope">
           {{ scope.row.return_time | timeFilter13 }}
         </template>
       </el-table-column>
-      <el-table-column label="操作时间" width="180">
+      <el-table-column label="操作时间" width="160">
         <template slot-scope="scope">
           {{ scope.row.operate_time | timeFilter13 }}
         </template>
       </el-table-column>
-      <el-table-column prop="borrower" label="借阅人" width="" />
+      <el-table-column prop="borrower" label="借阅人" width="120" />
       <el-table-column prop="state" label="状态" width="120">
         <template slot-scope="scope">
           {{ states[scope.row.state] }}
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="" fixed="right">
         <template slot-scope="scope">
           <el-button v-if="scope.row.state==0" type="success" size="mini" @click="confirmBorrow(scope.row)">确认租借</el-button>
           <el-button v-if="scope.row.state==2" type="warning" size="mini" @click="confirmReturn(scope.row)">确认归还</el-button>
