@@ -87,6 +87,7 @@ export function getRentalManageList(data) {
     data
   })
 }
+
 // 添加图书到我的借阅
 export function addBorrowBook(data) {
   return request({
@@ -135,5 +136,22 @@ export function confirmContinue(params) {
     url: 'http://localhost:4001/admin/book/confirmContinue',
     method: 'get',
     params
+  })
+}
+// 超级管理员重置管理员和普通用户的密码
+export function resetPassword(params) {
+  return request({
+    url: 'http://localhost:4001/superadmin/resetPassword',
+    method: 'get',
+    params
+  })
+}
+
+// 管理员获取用户列表
+export function getUserList(data) {
+  return request({
+    url: 'http://localhost:4001/admin/book/getUserList',
+    method: 'post',
+    data
   })
 }
