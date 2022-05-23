@@ -130,7 +130,8 @@ export default {
         })
         .catch(() => {
           this.$message({ type: "info", message: "已取消重置密码" });
-        });    },
+        });
+        },
     addType() {
       console.log("tinajia");
     },
