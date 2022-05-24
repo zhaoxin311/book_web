@@ -14,6 +14,7 @@
         <el-form-item>
           <el-button type="primary" size="small" @click="getList">查询</el-button>
           <el-button type="primary" size="small" @click="reset()">重置</el-button>
+          <el-button type="success" :loading="impLoading" size="small" @click="importList()">导出数据</el-button>
         </el-form-item>
       </el-form>
     </template>
@@ -93,6 +94,8 @@
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
 import { getBorrowBookList, returnBook, continueBorrow } from "@/api/book";
+
+import { parseTime } from '@/utils'
 export default {
   name: "TpyeManage",
   components: {
@@ -100,7 +103,7 @@ export default {
     AppContainer,
   },
   // filters:{
-  //   states(status){
+  //   states1(status){
   //     var statusMap = ''
   //   if (status === 1) statusMap = '借阅中'
   // 	if (status === 2) statusMap = '等待归还审核'
@@ -116,6 +119,7 @@ export default {
       continueBookVisible: false,//续借弹窗
       bookDetails:{},
       continueDay:10,
+      impLoading:false,
       formData: {
         paras: {
           book_no: "",
@@ -159,7 +163,7 @@ export default {
       await getBorrowBookList(this.formData).then((res) => {
         this.tableData = res.result;
         this.formData.totalRow = res.totalRow;
-        console.log(this.tableData);
+        // console.log(this.tableData);
       });
     },
     reset() {
@@ -191,10 +195,8 @@ export default {
     continueBook(row) {
       this.continueBookVisible = true
       this.bookDetails = { ...row };
-      console.log(row, "toDetails");
     },
     confirmContinueBook(row){
-      console.log(this.continueDay,'day');
       const params = {
         id: row.id,
         continueDay: this.continueDay
@@ -206,7 +208,39 @@ export default {
           this.$message({ type: "success", message: "已提交请求，等待管理员归还审核!" });
         }
       });
-    }
+    },
+    // 导出当前我的借阅列表信息
+    importList(){
+      this.impLoading = true
+      const fileName = '借阅记录'
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['图书id', '借阅人', '图书编号', '图书名称', '图书类型', '借书时间', '还书时间', '操作时间','当前状态']
+        const filterVal = ['id', 'borrower', 'book_no', 'book_name', 'book_type', 'borrow_time', 'return_time', 'operate_time','state']
+        const list = [].concat(this.tableData)
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: fileName + new Date().getTime(),
+          autoWidth: this.autoWidth,
+          bookType: 'xlsx'
+        })
+        this.impLoading = false
+      }).catch(() => {
+        this.impLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if ( ['borrow_time', 'return_time', 'operate_time'].includes(j) ) {
+          return parseTime(v[j])
+        } else if(j==='state'){
+          return this.states[v[j]]
+        } else {
+          return v[j]
+        }
+      }))
+    },
   },
 };
 </script>

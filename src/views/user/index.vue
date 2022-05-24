@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column label="修改时间" width="" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          {{ scope.row.update_time | timeFilter13 }}
+          {{ scope.row.last_edit_time | timeFilter13 }}
         </template>
       </el-table-column>
       <el-table-column label="操作">
