@@ -155,3 +155,19 @@ export function getUserList(data) {
     data
   })
 }
+// 个人中心echarts
+export function getTypeAmount(data) {
+  return request({
+    url: 'http://localhost:4001/echarts/getTypeAmount',
+    method: 'post',
+    data
+  })
+}
+// 个人中心echarts统计数据
+export function getUserAmount(data) {
+  return request({
+    url: 'http://localhost:4001/echarts/getUserAmount',
+    method: 'post',
+    data
+  })
+}
