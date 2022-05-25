@@ -64,7 +64,7 @@ export default {
 .info-container{
   width: 60%;
   height: 350px;
-  background: rgb(246,246,246,0.9);
+  background: rgb(246,246,246,0.5);
 }
 .center{
   display: flex;

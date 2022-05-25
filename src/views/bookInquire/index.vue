@@ -15,6 +15,7 @@
           <el-button type="primary" size="small" @click="getList">查询</el-button>
           <el-button type="primary" size="small" @click="reset()">重置</el-button>
           <el-button type="primary" size="small" @click="editOrAddBook()">添加</el-button>
+          <el-button type="success" :loading="impLoading" size="small" @click="importBookList()">导出数据</el-button>
         </el-form-item>
       </el-form>
     </template>
@@ -129,6 +130,7 @@ import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
 import rules from "./rule"; // 校验
 import { getBookList, addBook, updateBook, deleteBook, addBorrowBook, getBookType } from "@/api/book";
+import { parseTime } from '@/utils'
 export default {
   name: "TpyeManage",
   components: {
@@ -143,6 +145,7 @@ export default {
       addBookVisible: false, // 添加图书弹窗
       bookDetailsVisible: false, //书籍详情弹窗
       bookImgList: [], //大图
+      impLoading:false,
       formData: {
         paras: {
           book_no: "",
@@ -338,7 +341,37 @@ export default {
           })
         })
       });
-    }
+    },
+    // 导出当前书籍列表信息
+    importBookList(){
+      this.impLoading = true
+      const fileName = '图书馆书籍记录'
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['图书编号', '图书名称', '图书类型', '作者', '出版社', '定价（元）','数量（本）','出版时间']
+        const filterVal = ['book_no', 'book_name', 'book_type', 'book_author','book_publish', 'price', 'book_amount','publish_time']
+        const list = [].concat(this.tableData)
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: fileName + new Date().getTime(),
+          autoWidth: this.autoWidth,
+          bookType: 'xlsx'
+        })
+        this.impLoading = false
+      }).catch(() => {
+        this.impLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if ( ['publish_time'].includes(j) ) {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
+    },
   },
 };
 </script>
