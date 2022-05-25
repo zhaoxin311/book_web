@@ -22,6 +22,7 @@
       </el-table-column>
       <el-table-column prop="typeNo" label="类型编号" width="" />
       <el-table-column prop="typeName" label="类型名称" width="" />
+      <el-table-column prop="type_amount" label="书籍数量（本）" width="" />
       <el-table-column label="创建时间" width="" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           {{ scope.row.create_time | timeFilter13 }}
@@ -50,6 +51,9 @@
         </el-form-item>
         <el-form-item label="类型名称" prop="typeName">
           <el-input v-model="addTypeData.typeName" placeholder="请输入类型名称" clearable :style="{ width: '90%' }" />
+        </el-form-item>
+        <el-form-item label="书籍数量" prop="type_amount">
+          <el-input-number v-model="addTypeData.type_amount" :min="1"></el-input-number><span style="margin-left:10px;">单位:（本）</span>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -110,6 +114,7 @@ export default {
         typeName: "",
         create_time: "",
         update_time: "",
+        type_amount:1,
       },
       rules: {
         typeNo: [
@@ -117,6 +122,9 @@ export default {
         ],
         typeName: [
           { required: true, message: "请输入类型名称", trigger: "blur" },
+        ],
+        type_amount: [
+          { required: true, message: "请输入书籍数量", trigger: "blur", },
         ],
       },
       tableData: [],
