@@ -57,7 +57,7 @@
             </template>
             <el-descriptions-item label="用户名">{{ name }}</el-descriptions-item>
             <el-descriptions-item label="手机号">{{ phone }}</el-descriptions-item>
-            <el-descriptions-item label="身份">{{ roles==0?'管理员': (roles==1? '学生':'老师') }}</el-descriptions-item>
+            <el-descriptions-item label="身份">{{ roles==0?'超级管理员': (roles==1? '管理员':'普通用户') }}</el-descriptions-item>
             <el-descriptions-item label="备注">
               <el-tag size="small">{{ remark==1?'图书馆': (remark==2? '学校':'社会') }}</el-tag>
             </el-descriptions-item>
@@ -84,13 +84,14 @@
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="ruleForm.phone" />
         </el-form-item>
-        <el-form-item label="身份" prop="roles">
+        <!-- 修改个人信息时不能修改身份 -->
+        <!-- <el-form-item label="身份" prop="roles">
           <el-select v-model="ruleForm.roles" placeholder="请选择身份">
-            <el-option label="管理员" :value="0" />
-            <el-option label="老师" :value="2" />
-            <el-option label="学生" :value="1" />
+            <el-option label="超级管理员" :value="0" />
+            <el-option label="管理员" :value="1" />
+            <el-option label="普通用户" :value="2" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="备注" prop="remark">
           <el-select v-model="ruleForm.remark" placeholder="请选择备注信息">
             <el-option label="图书馆" :value="1" />
