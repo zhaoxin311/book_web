@@ -117,7 +117,7 @@
       <div class="center">
         <el-avatar :size="100" style=" right:0;left:0; margin: 0 auto;" :src="avatarUrl" />
       </div>
-      <div class="center"> <input ref="upFile" accept="image/png, image/jpeg" type="file" @change="File()"></div>
+      <div class="center"> <input ref="upFile" style="width: 75px; margin: 10px 0px;" accept="image/png, image/jpeg" type="file" @change="File()"></div>
 
       <div slot="footer" class="dialog-footer">
         <el-button size="small" type="primary" @click="avatarSubmit()">确认提交</el-button>
