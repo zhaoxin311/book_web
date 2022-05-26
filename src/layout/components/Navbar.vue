@@ -46,9 +46,6 @@ export default {
       'avatar',
       'name'
     ])
-    // name() {
-    //   return this.$store.getters.username
-    // }
   },
   methods: {
     toggleSideBar() {
@@ -60,14 +57,16 @@ export default {
     },
     individualism() {
       console.log('进入个人中心')
-      // this.$refs.personal.visible = true
-      // this.openInfo()
+      this.$router.push({name:'Personal'})
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.user-name{
+  cursor: pointer;
+}
 .el-icon-user-solid:before {
     font-size: 20px;
     margin-right: 10px;

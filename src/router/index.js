@@ -64,7 +64,7 @@ export const constantRoutes = [
       path: 'personal',
       name: 'Personal',
       component: () => import('@/views/personal/index'),
-      meta: { title: '个人中心', icon: 'el-icon-s-home', affix: false, display: true }
+      meta: { title: '个人中心', icon: 'el-icon-user-solid', affix: false, display: true }
     }]
   },
   {
@@ -76,7 +76,7 @@ export const constantRoutes = [
       path: 'user',
       name: 'User',
       component: () => import('@/views/user/index.vue'),
-      meta: { title: '用户管理', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin'] }
+      meta: { title: '用户管理', icon: 'el-icon-s-help', affix: false, display: true, roles: ['superadmin','admin'] }
     }]
   },
   {
@@ -88,7 +88,7 @@ export const constantRoutes = [
       path: 'tpyeManage',
       name: 'TpyeManage',
       component: () => import('@/views/tpyeManage/index.vue'),
-      meta: { title: '类型管理', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin'] }
+      meta: { title: '类型管理', icon: 'el-icon-s-marketing', affix: false, display: true, roles: ['superadmin','admin'] }
     }]
   },
   {
@@ -100,7 +100,7 @@ export const constantRoutes = [
       path: 'bookInquire',
       name: 'BookInquire',
       component: () => import('@/views/bookInquire/index.vue'),
-      meta: { title: '书籍检索', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin','user'] }
+      meta: { title: '书籍检索', icon: 'el-icon-s-management', affix: false, display: true, roles: ['superadmin','admin','user'] }
     }]
   },
   
@@ -113,7 +113,7 @@ export const constantRoutes = [
       path: 'bookBorrow',
       name: 'BookBorrow',
       component: () => import('@/views/bookBorrow/index.vue'),
-      meta: { title: '我的借阅', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin','user'] }
+      meta: { title: '我的借阅', icon: 'el-icon-s-data', affix: false, display: true, roles: ['superadmin','admin','user'] }
     }]
   },
   {
@@ -125,7 +125,7 @@ export const constantRoutes = [
       path: 'rentalManage',
       name: 'RentalManage',
       component: () => import('@/views/rentalManage/index.vue'),
-      meta: { title: '租借管理', icon: 'el-icon-s-home', affix: false, display: true, roles: ['superadmin','admin'] }
+      meta: { title: '租借管理', icon: 'el-icon-s-tools', affix: false, display: true, roles: ['superadmin','admin'] }
     }]
   },
   // {
