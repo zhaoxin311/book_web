@@ -23,7 +23,7 @@
         <span class="svg-container">
           <svg-icon icon-class="example" />
         </span>
-        <el-input key="verificationCode" ref="verificationCode" v-model="loginForm.imgCaptcha" type="text" placeholder="请输入验证码" name="verificationCode" tabindex="3" auto-complete="no" maxlength="4" @input="loginForm.imgCaptcha = loginForm.imgCaptcha.replace(regexLogin.imgCaptcha, '')" @keyup.enter.native="handleLogin" />
+        <el-input key="verificationCode" ref="verificationCode" v-model="loginForm.imgCaptcha" type="text" placeholder="请输入验证码" name="verificationCode" tabindex="3" auto-complete="off" maxlength="4" @input="loginForm.imgCaptcha = loginForm.imgCaptcha.replace(regexLogin.imgCaptcha, '')" @keyup.enter.native="handleLogin" />
         <span class="show-verification-code">
           <!-- <svg-icon v-html="imgCaptchaData" /> -->
           <div class="login-img-captcha" @click="refreshCaptcha" v-html="imgCaptchaData" />
