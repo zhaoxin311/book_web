@@ -5,12 +5,12 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <!-- <div class="right-menu-item menu-exit" @click="logout">
-        <i class="el-icon-user-solid" />
-        <span>退出</span>
+      <!-- <div class="right-menu-item menu-exit" >
+        <svg-icon icon-class="screen" class="icon-class" />
       </div> -->
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
+          
           <i class="el-icon-user-solid" />
           <span class="user-name">{{ name || '默认用户' }}<i class="el-icon-caret-bottom" /></span>
         </div>
@@ -145,6 +145,10 @@ export default {
         }
       }
     }
+  }
+  .icon-class{
+    font-size: 20px;
+    margin-right: 10px;
   }
 }
 </style>
