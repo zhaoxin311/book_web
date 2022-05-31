@@ -5,6 +5,7 @@ import Vue from 'vue'
 Vue.directive('dialogDrag', {
   bind(el, binding, vnode, oldVnode) {
     const dialogHeaderEl = el.querySelector('.el-dialog__header')
+    // const dialogHeaderEl = el.querySelector('.el-dialog')  //整个dialog均可拖拽
     const dragDom = el.querySelector('.el-dialog')
     dialogHeaderEl.style.cursor = 'move'
  
@@ -15,6 +16,9 @@ Vue.directive('dialogDrag', {
       // 鼠标按下，获得鼠标在盒子内的坐标（鼠标在页面的坐标 减去 对话框的坐标），计算当前元素距离可视区的距离
       const disX = e.clientX - dialogHeaderEl.offsetLeft
       const disY = e.clientY - dialogHeaderEl.offsetTop
+
+      // const disX = e.clientX  //整个dialog均可拖拽
+      // const disY = e.clientY   //整个dialog均可拖拽
  
       // 获取到的值带px 正则匹配替换
       let styL, styT

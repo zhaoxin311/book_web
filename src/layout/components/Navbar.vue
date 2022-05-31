@@ -61,7 +61,7 @@ export default {
     },
     toBigScreen(){
       console.log('进入大屏数据展示')
-      this.$router.push({name:'BigScreen'})
+      this.$router.push({path:'/bigScreen'})
     }
   }
 }
