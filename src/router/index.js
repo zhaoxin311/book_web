@@ -56,6 +56,21 @@ export const constantRoutes = [
     }]
   },
   {
+    path: '/bigScreen',
+    // component: Layout,
+    redirect: '/bigScreen',
+      name: 'BigScreen',
+    display: false,
+    component: () => import('@/views/bigScreen/index'),
+    hidden: true
+    // children: [{
+    //   path: 'bigScreen',
+    //   name: 'BigScreen',
+    //   component: () => import('@/views/bigScreen/index'),
+    //   meta: { title: '首页', icon: 'el-icon-s-home', affix: true, display: true }
+    // }]
+  },
+  {
     path: '/personal',
     component: Layout,
     redirect: '/personal',

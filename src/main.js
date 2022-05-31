@@ -13,6 +13,8 @@ import store from './store'
 import router from './router'
 import util from './api/util.js'
 
+import './directives/dialogDrag'//全局引入v-dialogDrag自定义指令
+
 Vue.prototype.util = util
 
 import '@/icons' // icon

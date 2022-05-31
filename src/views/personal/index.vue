@@ -73,7 +73,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-dialog title="修改个人信息" :visible.sync="userInfoFormVisible">
+    <el-dialog v-dialogDrag title="修改个人信息" :visible.sync="userInfoFormVisible">
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="account">
           <el-input v-model="ruleForm.account" />

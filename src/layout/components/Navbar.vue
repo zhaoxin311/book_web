@@ -5,9 +5,9 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <!-- <div class="right-menu-item menu-exit" >
-        <svg-icon icon-class="screen" class="icon-class" />
-      </div> -->
+      <div class="right-menu-item menu-exit" >
+        <svg-icon icon-class="screen" class="icon-class" @click.native="toBigScreen" />
+      </div>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           
@@ -58,6 +58,10 @@ export default {
     individualism() {
       console.log('进入个人中心')
       this.$router.push({name:'Personal'})
+    },
+    toBigScreen(){
+      console.log('进入大屏数据展示')
+      this.$router.push({name:'BigScreen'})
     }
   }
 }
@@ -110,7 +114,7 @@ export default {
       height: 100%;
       font-size: 18px;
       color: #5a5e66;
-      vertical-align: text-bottom;
+      // vertical-align: text-bottom;
 
       &.hover-effect {
         cursor: pointer;
