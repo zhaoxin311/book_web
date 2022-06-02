@@ -108,7 +108,7 @@ export default {
     /**  分页默认从第一页开始 */
     this.formData.pageNumber = 1;
     this.getList();
-  },
+  }, 
   methods: {
     // 查询
     async getList() {
