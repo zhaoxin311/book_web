@@ -120,6 +120,7 @@ export default {
       });
     },
     reset() {
+      
       this.formData = this.$options.data().formData; // 重置列表查询对象
       this.getList();
     },
