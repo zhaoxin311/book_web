@@ -20,10 +20,6 @@ Vue.prototype.util = util
 import '@/icons' // icon
 import '@/permission' // permission control
 
-
-import ExpandingCards from "@/components/ExpandingCards";
-Vue.component('ExpandingCards', ExpandingCards)
-
 /** 公共时间过滤器 */
 import vueFilter from './utils/time-filter'
 for (const key in vueFilter) {
