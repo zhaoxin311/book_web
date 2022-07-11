@@ -68,20 +68,20 @@
       <el-card class="box-card" style="margin-top:20px;">
         <div slot="header" class="clearfix">
           <span style=" font-size: 18px; font-weight: bold;">《 {{bookDetails.book_name}} 》</span>
-          <el-button  v-if="bookDetails.book_amount != 0" type="primary" size="mini" style="float: right;" @click="confirmContinueBook(bookDetails)">确认续借</el-button>
+          <el-button v-if="bookDetails.book_amount != 0" type="primary" size="mini" style="float: right;" @click="confirmContinueBook(bookDetails)">确认续借</el-button>
         </div>
-          <el-descriptions>
-            <el-descriptions-item label="书籍编号">{{bookDetails.book_no}}</el-descriptions-item>
-            <el-descriptions-item label="租借人"> {{ bookDetails.borrower }} </el-descriptions-item>
-            <el-descriptions-item label="租借时间"> {{ bookDetails.borrow_time | timeFilterYMD13 }} </el-descriptions-item>
-            <el-descriptions-item label="还书时间"> {{ bookDetails.return_time | timeFilterYMD13 }} </el-descriptions-item>
-            <el-descriptions-item label="当前状态" :span="2">
-              <el-tag type="danger" size="small">已逾期</el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="续借时长">
-              <el-input-number v-model="continueDay" size="mini" :min="10" :max="100"></el-input-number>（单位：天）
-            </el-descriptions-item>
-          </el-descriptions>
+        <el-descriptions>
+          <el-descriptions-item label="书籍编号">{{bookDetails.book_no}}</el-descriptions-item>
+          <el-descriptions-item label="租借人"> {{ bookDetails.borrower }} </el-descriptions-item>
+          <el-descriptions-item label="租借时间"> {{ bookDetails.borrow_time | timeFilterYMD13 }} </el-descriptions-item>
+          <el-descriptions-item label="还书时间"> {{ bookDetails.return_time | timeFilterYMD13 }} </el-descriptions-item>
+          <el-descriptions-item label="当前状态" :span="2">
+            <el-tag type="danger" size="small">已逾期</el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="续借时长">
+            <el-input-number v-model="continueDay" size="mini" :min="10" :max="100"></el-input-number>（单位：天）
+          </el-descriptions-item>
+        </el-descriptions>
       </el-card>
       <div slot="footer">
         <!-- <el-button size="small" @click="bookDetailsVisible = false">取消</el-button> -->
@@ -95,7 +95,7 @@ import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
 import { getBorrowBookList, returnBook, continueBorrow } from "@/api/book";
 
-import { parseTime } from '@/utils'
+import { parseTime } from "@/utils";
 export default {
   name: "TpyeManage",
   components: {
@@ -116,10 +116,10 @@ export default {
   data() {
     return {
       mainHeight: 0,
-      continueBookVisible: false,//续借弹窗
-      bookDetails:{},
-      continueDay:10,
-      impLoading:false,
+      continueBookVisible: false, //续借弹窗
+      bookDetails: {},
+      continueDay: 10,
+      impLoading: false,
       formData: {
         paras: {
           book_no: "",
@@ -132,8 +132,9 @@ export default {
       },
       tableData: [],
       state: "",
-      states: {   //图书状态
-        0:'等待租借审核',
+      states: {
+        //图书状态
+        0: "等待租借审核",
         1: "借阅中",
         2: "等待归还审核",
         3: "借阅已超时",
@@ -179,12 +180,15 @@ export default {
         .then(() => {
           const params = {
             id: row.id,
-            operate_time: (new Date()).valueOf(), 
+            operate_time: new Date().valueOf(),
           };
           returnBook(params).then((res) => {
             if (res.code === 200) {
               this.getList();
-              this.$message({ type: "success", message: "已提交请求，等待管理员归还审核!" });
+              this.$message({
+                type: "success",
+                message: "已提交请求，等待管理员归还审核!",
+              });
             }
           });
         })
@@ -193,53 +197,80 @@ export default {
         });
     },
     continueBook(row) {
-      this.continueBookVisible = true
+      this.continueBookVisible = true;
       this.bookDetails = { ...row };
     },
-    confirmContinueBook(row){
+    confirmContinueBook(row) {
       const params = {
         id: row.id,
-        continueDay: this.continueDay
-      }
+        continueDay: this.continueDay,
+      };
       continueBorrow(params).then((res) => {
         if (res.code === 200) {
-          this.continueBookVisible = false
+          this.continueBookVisible = false;
           this.getList();
-          this.$message({ type: "success", message: "已提交请求，等待管理员归还审核!" });
+          this.$message({
+            type: "success",
+            message: "已提交请求，等待管理员归还审核!",
+          });
         }
       });
     },
     // 导出当前我的借阅列表信息
-    importList(){
-      this.impLoading = true
-      const fileName = '借阅记录'
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['图书id', '借阅人', '图书编号', '图书名称', '图书类型', '借书时间', '还书时间', '操作时间','当前状态']
-        const filterVal = ['id', 'borrower', 'book_no', 'book_name', 'book_type', 'borrow_time', 'return_time', 'operate_time','state']
-        const list = [].concat(this.tableData)
-        const data = this.formatJson(filterVal, list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: fileName + new Date().getTime(),
-          autoWidth: this.autoWidth,
-          bookType: 'xlsx'
+    importList() {
+      this.impLoading = true;
+      const fileName = "借阅记录";
+      import("@/vendor/Export2Excel")
+        .then((excel) => {
+          const tHeader = [
+            "图书id",
+            "借阅人",
+            "图书编号",
+            "图书名称",
+            "图书类型",
+            "借书时间",
+            "还书时间",
+            "操作时间",
+            "当前状态",
+          ];
+          const filterVal = [
+            "id",
+            "borrower",
+            "book_no",
+            "book_name",
+            "book_type",
+            "borrow_time",
+            "return_time",
+            "operate_time",
+            "state",
+          ];
+          const list = [].concat(this.tableData);
+          const data = this.formatJson(filterVal, list);
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: fileName + new Date().getTime(),
+            autoWidth: this.autoWidth,
+            bookType: "xlsx",
+          });
+          this.impLoading = false;
         })
-        this.impLoading = false
-      }).catch(() => {
-        this.impLoading = false
-      })
+        .catch(() => {
+          this.impLoading = false;
+        });
     },
     formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if ( ['borrow_time', 'return_time', 'operate_time'].includes(j) ) {
-          return parseTime(v[j])
-        } else if(j==='state'){
-          return this.states[v[j]]
-        } else {
-          return v[j]
-        }
-      }))
+      return jsonData.map((v) =>
+        filterVal.map((j) => {
+          if (["borrow_time", "return_time", "operate_time"].includes(j)) {
+            return parseTime(v[j]);
+          } else if (j === "state") {
+            return this.states[v[j]];
+          } else {
+            return v[j];
+          }
+        })
+      );
     },
   },
 };

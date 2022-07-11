@@ -1,8 +1,8 @@
 <template>
   <div class="bigScreen">
     <div class="clock">
-      
-    <Clock></Clock>
+
+      <Clock></Clock>
     </div>
   </div>
 </template>
@@ -13,15 +13,13 @@ export default {
     Clock,
   },
   data() {
-    return {
-    };
+    return {};
   },
 
   mounted() {
-    this.getEcharts()
+    this.getEcharts();
   },
-  methods: {
-  },
+  methods: {},
 };
 </script>
 <style scoped lang="scss">
@@ -34,7 +32,7 @@ export default {
   // background-size: cover;
   overflow: hidden;
 }
-.clock{
+.clock {
   margin-top: 100px;
   display: flex;
   justify-content: center;
