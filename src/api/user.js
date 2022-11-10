@@ -61,3 +61,19 @@ export function getUpdateAvatar(data) {
     data
   })
 }
+// 删除禁用用户
+export function deleteMember(params) {
+  return request({
+    url: 'http://localhost:4001/user/deleteMember',
+    method: 'get',
+    params
+  })
+}
+// 取消禁用用户
+export function cancelUndisable(params) {
+  return request({
+    url: 'http://localhost:4001/user/cancelUndisable',
+    method: 'get',
+    params
+  })
+}

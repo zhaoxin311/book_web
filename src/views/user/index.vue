@@ -7,7 +7,6 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" size="small" @click="getList">查询</el-button>
-          <el-button type="primary" size="small" @click="addType">添加</el-button>
         </el-form-item>
       </el-form>
     </template>
@@ -18,11 +17,12 @@
         </template>
       </el-table-column>
       <el-table-column prop="account" label="用户名称" width="" />
-      <el-table-column prop="department" label="班级/部门" width="200" :show-overflow-tooltip="true"/>
-      <el-table-column prop="roles" label="班级/部门" >
-      <template slot-scope="scope">
+      <el-table-column prop="department" label="班级/部门" width="200" :show-overflow-tooltip="true" />
+      <el-table-column prop="roles" label="班级/部门">
+        <template slot-scope="scope">
           {{ scope.row.roles == 0 ? "超级管理员" : (scope.row.roles == 1 ? "管理员" : "普通用户") }}
-        </template></el-table-column>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" width="" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           {{ scope.row.create_time | timeFilter13 }}
@@ -36,7 +36,8 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button v-if="scope.row.roles != 0" type="" size="mini" @click="resetPassword(scope.row)">重置密码</el-button>
-          <el-button v-if="scope.row.roles != 0" type="danger" size="mini" @click="deleteType(scope.row.id)">禁用</el-button>
+          <el-button v-if="scope.row.roles != 0 && scope.row.is_deleted == 0" type="danger" size="mini" @click="deleteMember(scope.row.id)">禁用</el-button>
+          <el-button v-if="scope.row.roles != 0 && scope.row.is_deleted == 1" type="success" size="mini" @click="cancelUndisable(scope.row.id)">取消禁用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -48,7 +49,8 @@
 <script>
 import Pagination from "@/components/Pagination"; // 分页
 import AppContainer from "@/components/AppContainer/AppContainer.vue";
-import {  getUserList, resetPassword} from "@/api/book";
+import { getUserList, resetPassword } from "@/api/book";
+import { deleteMember, cancelUndisable } from "@/api/user";
 export default {
   name: "TpyeManage",
   components: {
@@ -131,12 +133,50 @@ export default {
         .catch(() => {
           this.$message({ type: "info", message: "已取消重置密码" });
         });
-        },
-    addType() {
-      console.log("tinajia");
     },
-    deleteType(id) {
-      console.log('shanchu');
+    deleteMember(id) {
+      this.$confirm("此操作将禁用该用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          const params = {
+            id: id,
+          };
+          deleteMember(params).then((res) => {
+            if (res.code === 200) {
+              this.getList();
+              this.$message({ type: "success", message: "禁用成功!" });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "已取消禁用" });
+        });
+      
+    },
+    cancelUndisable(id) {
+      this.$confirm("此操作将取消禁用该用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          const params = {
+            id: id,
+          };
+          cancelUndisable(params).then((res) => {
+            if (res.code === 200) {
+              this.getList();
+              this.$message({ type: "success", message: "成功!" });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "已取消" });
+        });
+      
     },
   },
 };
