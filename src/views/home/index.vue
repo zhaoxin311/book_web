@@ -2,8 +2,8 @@
   <AppContainer :main-height.sync="mainHeight">
     <div class="dashboard-container center">
       <div class="info-container">
-        <div class="dashboard-text"> 山东科技大学图书馆图书管理系统 </div>
-        <div class="dashboard-text1"> Shandong University of Science and Technology library management system </div>
+        <div class="dashboard-text"> XXXX大学图书馆图书管理系统 </div>
+        <div class="dashboard-text1"> XXXXXXX library management system </div>
         <div class="center">
         <img src="../../assets/img/book4.png" width="200px" style="margin-top:35px;" alt=""></div>
       </div>
